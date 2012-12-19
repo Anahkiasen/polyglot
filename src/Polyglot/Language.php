@@ -240,7 +240,7 @@ class Language
     if (sizeof($eager) == 1 and is_array($eager[0])) $eager = $eager[0];
 
     foreach ($eager as $r) {
-      if (!String::find('lang', $r)) $relationships[] = $r;
+      if (!String::find($r, 'lang')) $relationships[] = $r;
       else {
         $relationships[$r] = function($query) use ($language) {
           $query->where_lang($language);
