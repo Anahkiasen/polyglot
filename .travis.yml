@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+before_install:
+  - cd ~/builds
+  - git clone git://github.com/laravel/laravel.git
+  - mv ./Anahkiasen/polyglot ./laravel/bundles/polyglot
+  - echo "<?php return array('polyglot' => array('auto' => true));" > ./laravel/application/bundles.php
+  - cd ./laravel
+  - (echo "" && echo "Request::set_env('test');" && echo "" && echo "Bundle::start('polyglot');") >> ./application/start.php
+
+script: "php artisan test polyglot --env=local"
