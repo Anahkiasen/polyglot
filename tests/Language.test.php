@@ -1,7 +1,7 @@
 <?php
 include '_start.php';
 
-use \Polyglot\Language;
+use Polyglot\Language;
 
 class LanguageTest extends PolyglotTests
 {
@@ -10,6 +10,14 @@ class LanguageTest extends PolyglotTests
     $current = Config::get('application.language');
 
     $this->assertEquals($current, Language::current());
+  }
+
+  public function testCanChangeLanguage()
+  {
+    Language::set('en');
+    $current = Config::get('application.language');
+
+    $this->assertEquals('en', $current);
   }
 
   public function testCanSetLocaleFromLanguage()

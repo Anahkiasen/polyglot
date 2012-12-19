@@ -93,9 +93,9 @@ class Language
    *
    * @return string
    */
-  public static function change($language)
+  public static function set($language)
   {
-    $language = static::valid($language);
+    if (!static::valid($language)) return false;
 
     return Config::set('application.language', $language);
   }

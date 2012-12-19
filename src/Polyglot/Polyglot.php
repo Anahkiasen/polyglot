@@ -1,4 +1,9 @@
 <?php
+/**
+ * Polyglot
+ *
+ * Abstract model that eases the localization of model
+ */
 namespace Polyglot;
 
 use \Eloquent;
