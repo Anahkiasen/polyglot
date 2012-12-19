@@ -11,6 +11,7 @@ use \Lang;
 use \Section;
 use \Underscore\Arrays;
 use \Underscore\Parse;
+use \Underscore\String;
 use \URL;
 
 class Language
