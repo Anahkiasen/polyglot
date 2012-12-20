@@ -9,9 +9,9 @@ namespace Polyglot;
 use \Config;
 use \Lang;
 use \Section;
-use \Underscore\Arrays;
+use \Underscore\Types\Arrays;
 use \Underscore\Parse;
-use \Underscore\String;
+use \Underscore\Types\String;
 use \URL;
 
 class Language

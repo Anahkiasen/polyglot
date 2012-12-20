@@ -7,7 +7,7 @@
 namespace Polyglot;
 
 use \Eloquent;
-use \Underscore\Arrays;
+use \Underscore\Types\Arrays;
 
 class Polyglot extends Eloquent
 {
