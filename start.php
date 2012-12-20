@@ -19,3 +19,12 @@ Autoloader::namespaces(array(
 */
 
 Polyglot\Language::locale();
+
+/*
+|---------------------------------------------------------------------
+| Backup of the Language files
+|---------------------------------------------------------------------
+*/
+
+$test = Polyglot\Compiler::export();
+dd($test);

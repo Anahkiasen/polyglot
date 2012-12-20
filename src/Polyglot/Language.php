@@ -184,43 +184,6 @@ class Language
     return setlocale(LC_ALL, 0);
   }
 
-  /**
-   * Flattens out all language string in the current language for easier export
-   *
-   * @return array A flattened lang array
-   */
-  public static function compile($output = null)
-  {
-    $files = glob(path('app').'language/' .static::current(). '/*');
-
-    // Fetch the content of all the language files
-    foreach ($files as $file) {
-      $file = File::name($file);
-      if ($file == 'pagination') continue;
-      if ($file == 'validation') {
-        $lang[$file] = Lang::line($file.'.custom')->get();
-        $lang[$file] = Lang::line($file.'.attributes')->get();
-      } else $lang[$file] = Lang::line($file)->get();
-    }
-
-    // If the website isn't localized, cancel
-    if(!isset($lang)) return false;
-
-    // Flatten the final array
-    $lang = Arrays::flatten($lang);
-
-    // Sort the array
-    ksort($lang);
-
-    // If we provided an output file, save to it
-    if ($output) {
-      $lang = Parse::toCSV($lang);
-      \File::put(path('storage').'work'.DS.$output, $lang);
-    }
-
-    return $lang;
-  }
-
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////// ELOQUENT ////////////////////////////
   ////////////////////////////////////////////////////////////////////
