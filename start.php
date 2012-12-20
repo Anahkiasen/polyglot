@@ -26,5 +26,6 @@ Polyglot\Language::locale();
 |---------------------------------------------------------------------
 */
 
-$test = Polyglot\Compiler::export();
-dd($test);
+$language = Cache::remember('language', function() {
+  return Polyglot\Compiler::export();
+}, 60 * 24 * 30);
