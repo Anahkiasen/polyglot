@@ -32,12 +32,12 @@ class Polyglot extends Eloquent
 
   public function fr()
   {
-    return $this->has_one(get_called_class().'Lang')->where_lang('fr');
+    return $this->has_one($this->getLangClass())->where_lang('fr');
   }
 
   public function en()
   {
-    return $this->has_one(get_called_class().'Lang')->where_lang('en');
+    return $this->has_one($this->getLangClass())->where_lang('en');
   }
 
   /**
@@ -112,6 +112,21 @@ class Polyglot extends Eloquent
     $eager = call_user_func_array(array('\Polyglot\Language', 'eager'), func_get_args());
 
     return static::with($eager);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////////// HELPERS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  private function getLangClass()
+  {
+    $class = get_called_class();
+    if (class_exists($class.'Lang')) return $class.'Lang';
+
+    $class = str_replace('\\', '/', $class);
+    $class = basename($class);
+
+    return '\\'.$class.'Lang';
   }
 
 }
