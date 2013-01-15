@@ -40,6 +40,10 @@ class Polyglot extends Eloquent
     return $this->has_one($this->getLangClass())->where_lang('en');
   }
 
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// ATTRIBUTES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Checks if a field isset while taking into account localized attributes
    *
@@ -69,6 +73,16 @@ class Polyglot extends Eloquent
     }
 
     return parent::__get($key);
+  }
+
+  /**
+   * Default __toString state
+   *
+   * @return string [description]
+   */
+  public function __toString()
+  {
+    return $this->name;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -118,6 +132,11 @@ class Polyglot extends Eloquent
   //////////////////////////////// HELPERS ///////////////////////////
   ////////////////////////////////////////////////////////////////////
 
+  /**
+   * Get the Lang class corresponding to the current model
+   *
+   * @return string
+   */
   private function getLangClass()
   {
     $class = get_called_class();
