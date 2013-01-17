@@ -110,8 +110,8 @@ class Polyglot extends Eloquent
 
     // Update
     foreach ($langs as $lang) {
-      if($this->$lang) $this->$lang()->update($$lang);
-      else $this->$lang()->insert($$lang);
+      $this->$lang->fill($$lang);
+      $this->$lang->save();
     }
   }
 
