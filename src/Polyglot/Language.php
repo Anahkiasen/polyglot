@@ -84,9 +84,10 @@ class Language
    */
   public static function current()
   {
+    $base = trim(URL::base(), '/');
     $current = Config::get('application.language');
 
-    $language = preg_replace('#'.URL::base().'/([a-z]{2})/(.+)#', '$1', URL::current());
+    $language = preg_replace('#'.$base.'/([a-z]{2})/(.+)#', '$1', URL::current());
     if ($language and $language != $current) Language::set($language);
     if (String::length($language) != 2) $language = $current;
 
