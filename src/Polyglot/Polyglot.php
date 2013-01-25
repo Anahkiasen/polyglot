@@ -78,11 +78,11 @@ class Polyglot extends Eloquent
   /**
    * Default __toString state
    *
-   * @return string [description]
+   * @return string
    */
   public function __toString()
   {
-    return $this->name;
+    return (string) $this->name;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -109,9 +109,15 @@ class Polyglot extends Eloquent
     }
 
     // Update
+    $class = $this->getLangClass();
     foreach ($langs as $lang) {
-      $this->$lang->fill($$lang);
-      $this->$lang->save();
+      if (!is_object($this->$lang)) {
+        $class = new $class($$lang);
+        $this->$lang()->insert($class);
+      } else {
+        $this->$lang->fill($$lang);
+        $this->$lang->save();
+      }
     }
   }
 
