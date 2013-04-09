@@ -1,17 +1,21 @@
 <?php
-/**
- * Polyglot
- *
- * Abstract model that eases the localization of model
- */
 namespace Polyglot;
 
-use \Eloquent;
-use \Underscore\Types\Arrays;
+use Illuminate\Database\Eloquent\Model;
+use Underscore\Methods\ArraysMethods as Arrays;
 
-class Polyglot extends Eloquent
+/**
+ * Abstract model that eases the localization of model
+ */
+class Polyglot extends Model
 {
-  public static $polyglot = false;
+
+  /**
+   * An array of polyglot attributes
+   *
+   * @var array
+   */
+  public static $polyglot = array();
 
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// RELATIONSHIPS /////////////////////////

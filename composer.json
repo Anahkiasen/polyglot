@@ -1,7 +1,16 @@
 {
-  "require": {
-    "php": ">=5.3.0",
-    "anahkiasen/underscore-php": "dev-master"
-  },
-  "minimum-stability": "dev"
+	"name": "anahkiasen/polyglot",
+	"description": "Laravel localization helpers and models",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Maxime Fabre",
+			"email": "ehtnam6@gmail.Com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0",
+		"anahkiasen/underscore-php": "dev-master"
+	},
+	"minimum-stability": "dev"
 }

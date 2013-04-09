@@ -6,18 +6,26 @@
  */
 namespace Polyglot;
 
-use \Config;
-use \Lang;
-use \Section;
-use \Underscore\Types\Arrays;
-use \Underscore\Parse;
-use \Underscore\Types\String;
-use \URL;
+use Illuminate\Container\Container;
+use Underscore\Methods\ArraysMethods as Arrays;
+use Underscore\Methods\StringMethods as String;
+use Underscore\Parse;
 
 class Language
 {
+
+  /**
+   * Build the language class
+   *
+   * @param Container $app
+   */
+  public function __construct(Container $app)
+  {
+    $this->app = $app;
+  }
+
   ////////////////////////////////////////////////////////////////////
-  ////////////////////////// TRANSLATIONS ////////////////////////////
+  /////////////////////////// TRANSLATIONS ///////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -27,9 +35,9 @@ class Language
    *
    * @return string        A title Blade section
    */
-  public static function title($title = null)
+  public function title($title = null)
   {
-    $title = Lang::line($title, null)->get();
+    $title = $this->app['lang']->get($title, null)->get();
 
     return Section::inject('title', $title);
   }
@@ -42,16 +50,16 @@ class Language
    *
    * @return string           A translated string
    */
-  public static function translate($key, $fallback = null)
+  public function translate($key, $fallback = null)
   {
     if (!$fallback) $fallback = $key;
 
     // Search for the key itself
-    $translation = Lang::line($key)->get(null, '');
+    $translation = $this->app['lang']->get($key)->get(null, '');
 
     // If not found, search in the field attributes
     if (!$translation) {
-      $translation = Lang::line('validation.attributes.'.$key)
+      $translation = $this->app['lang']->get('validation.attributes.'.$key)
         ->get(null, $fallback);
     }
 
@@ -62,7 +70,7 @@ class Language
   }
 
   ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// HELPERS /////////////////////////////
+  ///////////////////////////// HELPERS //////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -72,9 +80,9 @@ class Language
    *
    * @return boolean
    */
-  public static function isActive($language)
+  public function isActive($language)
   {
-    return $language == Language::current();
+    return $language == $this->current();
   }
 
   /**
@@ -82,12 +90,12 @@ class Language
    *
    * @return string A language index
    */
-  public static function current()
+  public function current()
   {
-    $base = trim(URL::base(), '/');
-    $current = Config::get('application.language');
+    $base = trim($this->app['url']->basebase(), '/');
+    $current = $this->app['config']->get('application.language');
 
-    $language = preg_replace('#'.$base.'/([a-z]{2})/(.+)#', '$1', URL::current());
+    $language = preg_replace('#'.$base.'/([a-z]{2})/(.+)#', '$1', $this->app['url']->basecurrent());
     if ($language and $language != $current) Language::set($language);
     if (String::length($language) != 2) $language = $current;
 
@@ -101,11 +109,11 @@ class Language
    *
    * @return string
    */
-  public static function set($language)
+  public function set($language)
   {
     if (!static::valid($language)) return false;
 
-    return Config::set('application.language', $language);
+    return $this->app['config']->set('application.language', $language);
   }
 
   /**
@@ -113,9 +121,9 @@ class Language
    *
    * @return array An array of languages
    */
-  public static function available()
+  public function available()
   {
-    return Config::get('application.languages');
+    return $this->app['config']->get('application.languages');
   }
 
   /**
@@ -124,13 +132,13 @@ class Language
    * @param string $language The language
    * @return boolean
    */
-  public static function valid($language)
+  public function valid($language)
   {
     return in_array($language, static::available());
   }
 
   ////////////////////////////////////////////////////////////////////
-  //////////////////////////////// URLS //////////////////////////////
+  /////////////////////////////// URLS ///////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -140,27 +148,27 @@ class Language
    * @param  boolean $reset Whether navigation should be reset
    * @return string         An URL
    */
-  public static function to($lang, $reset = false)
+  public function to($lang, $reset = false)
   {
     // Reset path or not
-    if($reset) return URL::base().'/'.$lang;
+    if($reset) return $this->app['url']->basebase().'/'.$lang;
 
     // Check for invalid languages
     if(!static::valid($lang)) $lang = static::current();
 
     // Compute base URL with language added
-    $base    = trim(URL::base(), '/');
+    $base    = trim($this->app['url']->basebase(), '/');
     $base   .= '/'.$lang.'/';
-    $current = URL::current();
+    $current = $this->app['url']->basecurrent();
 
     // Replace base with localized base
-    $final = preg_replace('#' .URL::base(). '/?#', $base, $current);
+    $final = preg_replace('#' .$this->app['url']->basebase(). '/?#', $base, $current);
 
     return $final;
   }
 
   ////////////////////////////////////////////////////////////////////
-  //////////////////////////////// TASKS /////////////////////////////
+  /////////////////////////////// TASKS //////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
   /**
@@ -169,7 +177,7 @@ class Language
    * @param  string $language A language string to use
    * @return
    */
-  public static function locale($language = false)
+  public function locale($language = false)
   {
     // If nothing was given, just use current language
     if(!$language) $language = self::current();
@@ -200,7 +208,7 @@ class Language
    *
    * @return array An array of relationships
    */
-  public static function eager()
+  public function eager()
   {
     $language = static::current();
     $relationships = array();
