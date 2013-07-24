@@ -2,7 +2,6 @@
 namespace Polyglot;
 
 use Illuminate\Database\Eloquent\Model;
-use Underscore\Methods\ArraysMethods as Arrays;
 
 /**
  * Abstract model that eases the localization of model
