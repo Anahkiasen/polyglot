@@ -1,6 +1,5 @@
 <?php
 include __DIR__.'/../vendor/autoload.php';
-include __DIR__.'/Dummies/Lang.php';
 
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
@@ -21,12 +20,22 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   {
     $this->app = new Container;
 
-    $this->app['config'] = $this->getConfig();
+    $this->app['config'] = $this->mockConfig();
     $this->app['lang']   = new Lang;
 
     $this->app->bind('polyglot.lang', function($app) {
       return new Polyglot\Language($app);
     });
+  }
+
+  /**
+   * Clean up mocked instances
+   *
+   * @return void
+   */
+  public function tearDown()
+  {
+    Mockery::close();
   }
 
   /**
@@ -49,11 +58,11 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Get a mock of Config
+   * Mock Config
    *
    * @return Mockery
    */
-  protected function getConfig()
+  protected function mockConfig()
   {
     $config = Mockery::mock('Illuminate\Config\Repository');
     $config->shouldReceive('get')->with('app.languages')->andReturn(array('fr', 'en'));
