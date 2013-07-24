@@ -22,6 +22,7 @@
 		<directory>src/Polyglot</directory>
 		<exclude>
 			<file>src/Polyglot/PolyglotServiceProvider.php</file>
+			<file>src/Polyglot/Facades/Language.php</file>
 		</exclude>
 	</whitelist>
 	</filter>
