@@ -54,7 +54,7 @@ class Language
    */
   public function set($locale)
   {
-    if (!$this->valid($locale)) {
+    if (!$this->isValid($locale)) {
       return false;
     }
 
@@ -78,7 +78,7 @@ class Language
    *
    * @return boolean
    */
-  public function valid($locale)
+  public function isValid($locale)
   {
     return in_array($locale, $this->getAvailable());
   }

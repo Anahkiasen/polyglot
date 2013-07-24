@@ -58,7 +58,7 @@ abstract class Polyglot extends Model
    */
   public function __isset($key)
   {
-    if(static::$polyglot and $this->app['polyglot.lang']->valid($key)) return true;
+    if($this->polyglot and $this->app['polyglot.lang']->isValid($key)) return true;
 
     return parent::__isset($key);
   }
@@ -73,23 +73,13 @@ abstract class Polyglot extends Model
   public function __get($key)
   {
     // If the attribute is set to be automatically localized
-    if (static::$polyglot) {
-      if (in_array($key, static::$polyglot)) {
+    if ($this->polyglot) {
+      if (in_array($key, $this->polyglot)) {
         return $this->lang ? $this->lang->$key : null;
       }
     }
 
     return parent::__get($key);
-  }
-
-  /**
-   * Default __toString state
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return (string) $this->name;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -103,7 +93,9 @@ abstract class Polyglot extends Model
    */
   public function localize($localization)
   {
-    if(!$localization) return false;
+    if(!$localization) {
+      return false;
+    }
 
     $langs = array_keys($localization[key($localization)]);
 
@@ -131,14 +123,20 @@ abstract class Polyglot extends Model
   /**
    * Localize a "with" method
    *
+   * @param Query  $query
+   * @param string $relations,...
+   *
    * @return Query
    */
-  public static function withLang()
+  public function scopeWithLang()
   {
-    // Localize
-    $eager = call_user_func_array(array($this->app['polyglot.lang'], 'eager'), func_get_args());
+    $relations = func_get_args();
+    $query     = array_shift($relations);
 
-    return $this->with($eager);
+    // Localize
+    $eager = call_user_func_array(array($this->app['polyglot.lang'], 'eager'), $relations);
+
+    return $query->with($eager);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -150,10 +148,13 @@ abstract class Polyglot extends Model
    *
    * @return string
    */
-  private function getLangClass()
+  protected function getLangClass()
   {
+    // Check for ModelLang
     $class = get_called_class();
-    if (class_exists($class.'Lang')) return $class.'Lang';
+    if (class_exists($class.'Lang')) {
+      return $class.'Lang';
+    }
 
     $class = str_replace('\\', '/', $class);
     $class = basename($class);

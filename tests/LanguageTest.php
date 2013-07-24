@@ -27,8 +27,8 @@ class LanguageTest extends PolyglotTests
 
   public function testCanCheckLanguageIsValid()
   {
-    $language1 = $this->app['polyglot.lang']->valid('en');
-    $language2 = $this->app['polyglot.lang']->valid('rg');
+    $language1 = $this->app['polyglot.lang']->isValid('en');
+    $language2 = $this->app['polyglot.lang']->isValid('rg');
 
     $this->assertTrue($language1);
     $this->assertFalse($language2);

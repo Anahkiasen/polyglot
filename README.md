@@ -1,8 +1,7 @@
 Polyglot
 ========
 
-Polyglot is a localization helper for the Laravel framework.
-It's an helper class but mostly it's a model you can extend.
+Polyglot is a localization helper for the Laravel framework, it's an helper class but mostly it's a model you can extend.
 
 Setting a model as polyglot will allow you to make fields speak several languages. Polyglot requires you to separate common fields from localized ones assuming the following common pattern :
 
@@ -27,7 +26,7 @@ From there you can either access any language easily by doing the following : `$
 ```php
 class Article
 {
-  public static $polyglot = array('title', 'content');
+  protected $polyglot = array('title', 'content');
 }
 
 // Get an automatically localized Article
