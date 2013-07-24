@@ -150,15 +150,9 @@ abstract class Polyglot extends Model
    */
   protected function getLangClass()
   {
-    // Check for ModelLang
-    $class = get_called_class();
-    if (class_exists($class.'Lang')) {
-      return $class.'Lang';
-    }
+    $pattern = $this->app['config']->get('polyglot::model_pattern');
+    $model   = get_called_class();
 
-    $class = str_replace('\\', '/', $class);
-    $class = basename($class);
-
-    return '\\'.$class.'Lang';
+    return str_replace('{model}', $model, $pattern);
   }
 }

@@ -1,0 +1,12 @@
+
+
+Code Coverage Report:     
+  2013-07-24 04:46:37     
+                          
+ Summary:                 
+  Classes:  0.00% (0/3)   
+  Methods: 38.89% (7/18)  
+  Lines:   21.78% (22/101)
+
+\Polyglot::Language
+  Methods:  77.78% ( 7/ 9)   Lines:  64.71% ( 22/ 34)

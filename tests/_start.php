@@ -3,6 +3,7 @@ include __DIR__.'/../vendor/autoload.php';
 include __DIR__.'/Dummies/Lang.php';
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 
 abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 {
@@ -26,6 +27,21 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
     $this->app->bind('polyglot.lang', function($app) {
       return new Polyglot\Language($app);
     });
+  }
+
+  /**
+   * Get an instance from the Container
+   *
+   * @param  string $key
+   *
+   * @return object
+   */
+  public function __get($key)
+  {
+    $key = Str::snake($key);
+    $key = str_replace('_', '.', $key);
+
+    return $this->app[$key];
   }
 
   ////////////////////////////////////////////////////////////////////
