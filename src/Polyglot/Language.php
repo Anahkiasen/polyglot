@@ -42,7 +42,7 @@ class Language
    */
   public function current()
   {
-    return $this->app['lang']->locale();
+    return $this->app['lang']->getLocale();
   }
 
   /**
