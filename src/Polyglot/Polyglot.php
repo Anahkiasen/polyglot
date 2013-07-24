@@ -7,15 +7,14 @@ use Underscore\Methods\ArraysMethods as Arrays;
 /**
  * Abstract model that eases the localization of model
  */
-class Polyglot extends Model
+abstract class Polyglot extends Model
 {
-
   /**
    * An array of polyglot attributes
    *
    * @var array
    */
-  public static $polyglot = array();
+  protected $polyglot = array();
 
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// RELATIONSHIPS /////////////////////////
@@ -25,23 +24,26 @@ class Polyglot extends Model
    * Reroutes functions to the language in use
    *
    * @param  string  $lang A language to use
-   * @return Has_One
+   *
+   * @return HasOne
    */
   public function lang($lang = null)
   {
-    if(!$lang) $lang = Language::current();
+    if(!$lang) {
+      $lang = $this->app['polyglot.lang']->current();
+    }
 
     return $this->$lang();
   }
 
   public function fr()
   {
-    return $this->has_one($this->getLangClass())->where_lang('fr');
+    return $this->hasOne($this->getLangClass())->whereLang('fr');
   }
 
   public function en()
   {
-    return $this->has_one($this->getLangClass())->where_lang('en');
+    return $this->hasOne($this->getLangClass())->whereLang('en');
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -52,11 +54,12 @@ class Polyglot extends Model
    * Checks if a field isset while taking into account localized attributes
    *
    * @param string $key The key
+   *
    * @return boolean
    */
   public function __isset($key)
   {
-    if(static::$polyglot and Language::valid($key)) return true;
+    if(static::$polyglot and $this->app['polyglot.lang']->valid($key)) return true;
 
     return parent::__isset($key);
   }
@@ -65,6 +68,7 @@ class Polyglot extends Model
    * Get a localized attribute
    *
    * @param string $key The attribute
+   *
    * @return mixed
    */
   public function __get($key)
@@ -130,12 +134,12 @@ class Polyglot extends Model
    *
    * @return Query
    */
-  public static function with_lang()
+  public static function withLang()
   {
     // Localize
-    $eager = call_user_func_array(array('\Polyglot\Language', 'eager'), func_get_args());
+    $eager = call_user_func_array(array($this->app['polyglot.lang'], 'eager'), func_get_args());
 
-    return static::with($eager);
+    return $this->with($eager);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -157,5 +161,4 @@ class Polyglot extends Model
 
     return '\\'.$class.'Lang';
   }
-
 }

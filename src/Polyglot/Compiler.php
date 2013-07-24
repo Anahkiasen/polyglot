@@ -1,11 +1,10 @@
 <?php
 namespace Polyglot;
 
-use \File;
-use \Lang;
-use \Underscore\Parse;
-use \Underscore\Types\Arrays;
-use \Underscore\Types\String;
+use File;
+use Lang;
+use Underscore\Types\Arrays;
+use Underscore\Types\String;
 
 class Compiler
 {

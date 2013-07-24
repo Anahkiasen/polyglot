@@ -8,13 +8,12 @@ use Illuminate\Support\ServiceProvider;
  */
 class PolyglotServiceProvider extends ServiceProvider
 {
-
   /**
    * Register classes
    */
   public function register()
   {
-    $this->app->bind('polyglot.language', function($app) {
+    $this->app->bind('polyglot.lang', function() {
       return new Language;
     });
   }
@@ -28,5 +27,4 @@ class PolyglotServiceProvider extends ServiceProvider
   {
     return array('polyglot');
   }
-
 }

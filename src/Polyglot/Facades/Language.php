@@ -7,6 +7,6 @@ class Language extends Facade
 {
   public function getFacadeAccessor()
   {
-    return 'polyglot.language';
+    return 'polyglot.lang';
   }
 }

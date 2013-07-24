@@ -1,19 +1,15 @@
 <?php
-/**
- * Language
- *
- * General localization helpers
- */
 namespace Polyglot;
 
 use Illuminate\Container\Container;
 use Underscore\Methods\ArraysMethods as Arrays;
 use Underscore\Methods\StringMethods as String;
-use Underscore\Parse;
 
+/**
+ * General localization helpers
+ */
 class Language
 {
-
   /**
    * Build the language class
    *
@@ -65,7 +61,6 @@ class Language
 
     // If we found a translations array
     if (is_array($translation)) $translation = $fallback;
-
     return ucfirst($translation);
   }
 
@@ -98,7 +93,6 @@ class Language
     $language = preg_replace('#'.$base.'/([a-z]{2})/(.+)#', '$1', $this->app['url']->basecurrent());
     if ($language and $language != $current) Language::set($language);
     if (String::length($language) != 2) $language = $current;
-
     return $language;
   }
 
@@ -112,7 +106,6 @@ class Language
   public function set($language)
   {
     if (!static::valid($language)) return false;
-
     return $this->app['config']->set('application.language', $language);
   }
 
