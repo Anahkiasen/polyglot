@@ -3,7 +3,7 @@ class LanguageTest extends PolyglotTests
 {
   public function testCanGetCurrentLanguage()
   {
-    $current = $this->app['lang']->getLocale();
+    $current = $this->app['translator']->getLocale();
 
     $this->assertEquals($current, $this->polyglotLang->current());
   }
@@ -11,7 +11,7 @@ class LanguageTest extends PolyglotTests
   public function testCanChangeLanguage()
   {
     $this->polyglotLang->set('en');
-    $current = $this->app['lang']->getLocale();
+    $current = $this->app['translator']->getLocale();
 
     $this->assertEquals('en', $current);
   }

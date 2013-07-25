@@ -20,8 +20,8 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   {
     $this->app = new Container;
 
-    $this->app['config'] = $this->mockConfig();
-    $this->app['lang']   = new Lang;
+    $this->app['config']     = $this->mockConfig();
+    $this->app['translator'] = new Lang;
 
     $this->app->bind('polyglot.lang', function($app) {
       return new Polyglot\Language($app);
@@ -65,7 +65,7 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   protected function mockConfig()
   {
     $config = Mockery::mock('Illuminate\Config\Repository');
-    $config->shouldReceive('get')->with('app.languages')->andReturn(array('fr', 'en'));
+    $config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
 
     return $config;
   }
