@@ -1,11 +1,11 @@
 <?php
-namespace Polyglot;
+namespace Polyglot\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 class Language extends Facade
 {
-  public function getFacadeAccessor()
+  public static function getFacadeAccessor()
   {
     return 'polyglot.lang';
   }
