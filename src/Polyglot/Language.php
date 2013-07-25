@@ -42,7 +42,7 @@ class Language
    */
   public function current()
   {
-    return $this->app['lang']->getLocale();
+    return $this->app['translator']->getLocale();
   }
 
   /**
@@ -58,7 +58,7 @@ class Language
       return false;
     }
 
-    return $this->app['lang']->setLocale($locale);
+    return $this->app['translator']->setLocale($locale);
   }
 
   /**
@@ -68,7 +68,7 @@ class Language
    */
   public function getAvailable()
   {
-    return $this->app['config']->get('app.languages');
+    return $this->app['config']->get('polyglot::locales');
   }
 
   /**

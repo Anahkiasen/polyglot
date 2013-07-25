@@ -1,6 +1,8 @@
 <?php
 namespace Polyglot;
 
+use Config;
+use Polyglot\Facades\Language;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,7 +31,7 @@ abstract class Polyglot extends Model
   public function lang($lang = null)
   {
     if(!$lang) {
-      $lang = $this->app['polyglot.lang']->current();
+      $lang = Language::current();
     }
 
     return $this->$lang();
@@ -58,7 +60,9 @@ abstract class Polyglot extends Model
    */
   public function __isset($key)
   {
-    if($this->polyglot and $this->app['polyglot.lang']->isValid($key)) return true;
+    if($this->polyglot and Language::isValid($key)) {
+      return true;
+    }
 
     return parent::__isset($key);
   }
@@ -134,7 +138,7 @@ abstract class Polyglot extends Model
     $query     = array_shift($relations);
 
     // Localize
-    $eager = call_user_func_array(array($this->app['polyglot.lang'], 'eager'), $relations);
+    $eager = call_user_func_array('Language::eager', $relations);
 
     return $query->with($eager);
   }
@@ -150,8 +154,12 @@ abstract class Polyglot extends Model
    */
   protected function getLangClass()
   {
-    $pattern = $this->app['config']->get('polyglot::model_pattern');
+    $pattern = Config::get('polyglot::model_pattern');
+
+    // Get class name
     $model   = get_called_class();
+    $model   = str_replace('\\', '/', $model);
+    $model   = basename($model);
 
     return str_replace('{model}', $model, $pattern);
   }

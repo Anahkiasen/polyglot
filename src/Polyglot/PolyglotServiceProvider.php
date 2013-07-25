@@ -15,8 +15,8 @@ class PolyglotServiceProvider extends ServiceProvider
   {
     $this->app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
 
-    $this->app->bind('polyglot.lang', function() {
-      return new Language;
+    $this->app->bind('polyglot.lang', function($app) {
+      return new Language($app);
     });
   }
 
