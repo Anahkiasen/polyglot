@@ -26,6 +26,11 @@ abstract class Polyglot extends Model
   {
     static::saving(function($model) {
 
+      // Cancel if not localized
+      if (empty($model->getPolyglotAttributes())) {
+        return true;
+      }
+
       // Get the model's attributes
       $attributes = $model->getAttributes();
       $translated = array();
@@ -59,7 +64,9 @@ abstract class Polyglot extends Model
         $model->translations()->save($langModel);
       }
 
-      return $model->lang($lang)->fill($translated)->save();
+      $langModel->fill($translated)->save();
+
+      return false;
     });
   }
 
@@ -80,7 +87,7 @@ abstract class Polyglot extends Model
       $lang = Language::current();
     }
 
-    return $this->$lang()->first();
+    return $this->$lang();
   }
 
   /**
@@ -114,7 +121,7 @@ abstract class Polyglot extends Model
    */
   public function getPolyglotAttributes()
   {
-    return array_merge($this->polyglot, ['fr']);
+    return array_merge($this->polyglot, ['lang']);
   }
 
   /**
@@ -145,7 +152,9 @@ abstract class Polyglot extends Model
     // If the attribute is set to be automatically localized
     if ($this->polyglot) {
       if (in_array($key, $this->polyglot)) {
-        return $this->lang ? $this->lang->$key : null;
+        $lang = Language::current();
+
+        return $this->$lang ? $this->$lang->$key : null;
       }
     }
 
@@ -203,9 +212,12 @@ abstract class Polyglot extends Model
     $relations = func_get_args();
     $query     = array_shift($relations);
 
+    if (empty($relations)) {
+      $relations = array(Language::current());
+    }
+
     // Localize
     $eager = call_user_func_array('Language::eager', $relations);
-
     return $query->with($eager);
   }
 
