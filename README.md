@@ -55,3 +55,6 @@ $article->fr->fill([
 
 Globally speaking when Polyglot sees you're trying to save localized attribute on the parent model, it will automatically fetch the Lang model and save them on it instead.
 If no `lang` attribute is passed, Polyglot will use the current language.
+
+Note that, as your attributes are now split into two tables, you can Polyglot eager load the correct Lang relation with the `withLang` method.
+Per example `Article::withLang()->get()` will return Articles with `fr` autoloaded if it's the current language, or `en`, according to `app.locale`.
