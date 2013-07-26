@@ -26,10 +26,32 @@ From there you can either access any language easily by doing the following : `$
 ```php
 class Article
 {
-  protected $polyglot = array('title', 'content');
+  protected $polyglot = ['title', 'content'];
 }
 
 // Get an automatically localized Article
 $article = Article::find(4)
+
+echo $article->fr->title // This will print out the french title
 echo $article->title // This will print out the title in the current language
 ```
+
+Polyglot also helps you saving localized attributes :
+
+```php
+$article->fill([
+  'title'   => 'Titre',
+  'content' => 'Contenu',
+  'lang'    => 'fr',
+])->save();
+
+// Is the same as
+
+$article->fr->fill([
+  'title'   => 'Titre',
+  'content' => 'Contenu',
+])->save();
+```
+
+Globally speaking when Polyglot sees you're trying to save localized attribute on the parent model, it will automatically fetch the Lang model and save them on it instead.
+If no `lang` attribute is passed, Polyglot will use the current language.
