@@ -17,6 +17,52 @@ abstract class Polyglot extends Model
    */
   protected $polyglot = array();
 
+  /**
+   * The "booting" method of the model.
+   *
+   * @return void
+   */
+  protected static function boot()
+  {
+    static::saving(function($model) {
+
+      // Get the model's attributes
+      $attributes = $model->getAttributes();
+      $translated = array();
+
+      // Extract polyglot attributes
+      foreach ($attributes as $key => $value) {
+        if (in_array($key, $model->getPolyglotAttributes())) {
+          unset($attributes[$key]);
+          $translated[$key] = $value;
+        }
+      }
+
+      // If no localized attributes, continue
+      if (empty($translated)) {
+        return true;
+      }
+
+      // Get the current lang and Lang model
+      $lang      = array_get($translated, 'lang', Language::current());
+      $langModel = $model->$lang;
+      $translated['lang'] = $lang;
+
+      // Save original model
+      $model = $model->newInstance($attributes, $model->exists);
+      $model->save();
+
+      // If no Lang model, create one
+      if (!$langModel) {
+        $langModel = $model->getLangClass();
+        $langModel = new $langModel($translated);
+        $model->translations()->save($langModel);
+      }
+
+      return $model->lang($lang)->fill($translated)->save();
+    });
+  }
+
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// RELATIONSHIPS /////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -34,7 +80,17 @@ abstract class Polyglot extends Model
       $lang = Language::current();
     }
 
-    return $this->$lang();
+    return $this->$lang()->first();
+  }
+
+  /**
+   * Get all translations
+   *
+   * @return Collection
+   */
+  public function translations()
+  {
+    return $this->hasMany($this->getLangClass());
   }
 
   public function fr()
@@ -50,6 +106,16 @@ abstract class Polyglot extends Model
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////// ATTRIBUTES //////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the polyglot attributes
+   *
+   * @return array
+   */
+  public function getPolyglotAttributes()
+  {
+    return array_merge($this->polyglot, ['fr']);
+  }
 
   /**
    * Checks if a field isset while taking into account localized attributes
@@ -152,7 +218,7 @@ abstract class Polyglot extends Model
    *
    * @return string
    */
-  protected function getLangClass()
+  public function getLangClass()
   {
     $pattern = Config::get('polyglot::model_pattern');
 
