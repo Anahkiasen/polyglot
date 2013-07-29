@@ -27,7 +27,8 @@ abstract class Polyglot extends Model
     static::saving(function($model) {
 
       // Cancel if not localized
-      $hasPolyglotAttributes = empty($model->getPolyglotAttributes());
+      $hasPolyglotAttributes = $model->getPolyglotAttributes();
+      $hasPolyglotAttributes = empty($hasPolyglotAttributes);
       if ($hasPolyglotAttributes) {
         return true;
       }
