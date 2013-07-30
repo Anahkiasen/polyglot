@@ -26,6 +26,5 @@
     "psr-0": {
       "Polyglot": "src"
     }
-  },
-	"minimum-stability": "dev"
+  }
 }
