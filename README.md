@@ -1,7 +1,14 @@
-Polyglot
-========
+# Polyglot
 
-Polyglot is a localization helper for the Laravel framework, it's an helper class but mostly it's a model you can extend.
+[![Build Status](https://travis-ci.org/Anahkiasen/polyglot.png)](https://travis-ci.org/Anahkiasen/polyglot)
+
+## Introduction
+
+Polyglot is a localization helper for the Laravel framework, it's an helper class to localize both your routes and your models.
+
+To install it, do `composer require anahkiasen/polyglot:dev-master`, then add `Polyglot\PolyglotServiceProvider` to the `providers` array in `app/config/app.php`.
+
+## Model localization
 
 Setting a model as polyglot will allow you to make fields speak several languages. Polyglot requires you to separate common fields from localized ones assuming the following common pattern :
 
@@ -58,3 +65,21 @@ If no `lang` attribute is passed, Polyglot will use the current language.
 
 Note that, as your attributes are now split into two tables, you can Polyglot eager load the correct Lang relation with the `withLang` method.
 Per example `Article::withLang()->get()` will return Articles with `fr` autoloaded if it's the current language, or `en`, according to `app.locale`.
+
+## Routes localization
+
+To localize your routes, you need to set the `locales` option in your config file, per example `array('fr', 'en')`. Now you may define your routes as such :
+
+```php
+$prefix = Polyglot\Facades\Language::getRoutesPrefix();
+Route::group($prefix, function() {
+  Route::get('/', 'HomeController@index');
+  Route::get('articles', 'ArticlesController@index');
+  // etc...
+});
+```
+
+Now you can access `/fr` and `/fr/articles`, or `/en` and `/en/articles` – Polyglot will recognize the locale in the URL and automatically set your app in that language.
+There is also a `default` option in the config file, setting that option to a locale like `'default' => 'fr'` will make the root URLs point to that locale. So accessing `/articles` without prefixing it with a locale would render the page in french.
+
+Note that you can pass an additional group to the `Language::getRoutesPrefix`, like this : `Language::getRoutesPrefix(array('before' => 'auth'))`.

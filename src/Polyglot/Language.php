@@ -54,11 +54,9 @@ class Language
    */
   public function set($locale)
   {
-    if (!$this->isValid($locale)) {
-      return false;
-    }
+    $locale = $this->sanitize($locale);
 
-    return $this->app['translator']->setLocale($locale);
+    return $this->app->setLocale($locale);
   }
 
   /**
@@ -81,6 +79,58 @@ class Language
   public function isValid($locale)
   {
     return in_array($locale, $this->getAvailable());
+  }
+
+  /**
+   * Sanitize a locale
+   *
+   * @param  string $locale
+   *
+   * @return string
+   */
+  public function sanitize($locale)
+  {
+    $fallback = $this->app['config']->get('polyglot::default');
+
+    return $this->isValid($locale) ? $locale : $fallback;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////////// HELPERS ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the correct route prefix to use
+   *
+   * @return array
+   */
+  public function getRoutesPrefix($group = array())
+  {
+    $locale = $this->getLocaleFromUrl();
+    $this->set($locale);
+
+    // Return group untouched if default
+    if ($locale == $this->app['config']->get('polyglot::default')) {
+      return $group;
+    }
+
+    return array_merge($group, array('prefix' => $locale));
+  }
+
+  /**
+   * Get the locale in an URL
+   *
+   * @param  string $url
+   *
+   * @return string
+   */
+  public function getLocaleFromUrl($url = null)
+  {
+    if (!$url) {
+      $locale = $this->app['request']->segment(1);
+    }
+
+    return $this->sanitize($locale);
   }
 
   ////////////////////////////////////////////////////////////////////

@@ -1,8 +1,8 @@
 <?php
 namespace Polyglot;
 
+use App;
 use Config;
-use Polyglot\Facades\Language;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -51,7 +51,7 @@ abstract class Polyglot extends Model
       }
 
       // Get the current lang and Lang model
-      $lang      = array_get($translated, 'lang', Language::current());
+      $lang      = array_get($translated, 'lang', App::make('polyglot.lang')->current());
       $langModel = $model->$lang;
       $translated['lang'] = $lang;
 
@@ -86,7 +86,7 @@ abstract class Polyglot extends Model
   public function lang($lang = null)
   {
     if(!$lang) {
-      $lang = Language::current();
+      $lang = App::make('polyglot.lang')->current();
     }
 
     return $this->$lang();
@@ -135,7 +135,7 @@ abstract class Polyglot extends Model
    */
   public function __isset($key)
   {
-    if($this->polyglot and Language::isValid($key)) {
+    if($this->polyglot and App::make('polyglot.lang')->isValid($key)) {
       return true;
     }
 
@@ -154,7 +154,7 @@ abstract class Polyglot extends Model
     // If the attribute is set to be automatically localized
     if ($this->polyglot) {
       if (in_array($key, $this->polyglot)) {
-        $lang = Language::current();
+        $lang = App::make('polyglot.lang')->current();
 
         return $this->$lang ? $this->$lang->$key : null;
       }
@@ -215,11 +215,11 @@ abstract class Polyglot extends Model
     $query     = array_shift($relations);
 
     if (empty($relations)) {
-      $relations = array(Language::current());
+      $relations = array(App::make('polyglot.lang')->current());
     }
 
     // Localize
-    $eager = call_user_func_array('Language::eager', $relations);
+    $eager = call_user_func_array(array(App::make('polyglot.lang'), 'eager'), $relations);
     return $query->with($eager);
   }
 

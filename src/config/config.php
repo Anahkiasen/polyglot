@@ -1,5 +1,9 @@
 <?php return array(
 
+	// The default locale if none is provided in the URL
+	// Leave empty to force the use of locales prefixes in URLs
+	'default' => 'en',
+
 	// The available locales
 	'locales' => array(),
 

@@ -56,12 +56,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "c5175eabb5e992096d8853d438aed072fca1e7bb"
+                "reference": "255ee27c23044058639ee30ad73e9fee4e264c44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/c5175eabb5e992096d8853d438aed072fca1e7bb",
-                "reference": "c5175eabb5e992096d8853d438aed072fca1e7bb",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/255ee27c23044058639ee30ad73e9fee4e264c44",
+                "reference": "255ee27c23044058639ee30ad73e9fee4e264c44",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                     "email": "taylorotwell@gmail.com"
                 }
             ],
-            "time": "2013-07-09 13:05:22"
+            "time": "2013-07-29 21:23:18"
         }
     ],
     "packages-dev": [
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "7c53b7a6d1d1538f8180927247c96dd1df900248"
+                "reference": "437735be9c1760994c401f8752301f187b0954ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/7c53b7a6d1d1538f8180927247c96dd1df900248",
-                "reference": "7c53b7a6d1d1538f8180927247c96dd1df900248",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/437735be9c1760994c401f8752301f187b0954ba",
+                "reference": "437735be9c1760994c401f8752301f187b0954ba",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-07-10 22:15:03"
+            "time": "2013-07-24 12:43:00"
         }
     ],
     "aliases": [
