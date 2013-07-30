@@ -25,7 +25,9 @@ class LanguageTest extends PolyglotTests
 
   public function testCantSetUnexistingLocales()
   {
-    $this->assertFalse($this->polyglotLang->set('ds'));
+    $this->polyglotLang->set('ds');
+
+    $this->assertEquals('fr', $this->polyglotLang->current());
   }
 
   public function testCanSetLocaleFromLanguage()
@@ -54,5 +56,28 @@ class LanguageTest extends PolyglotTests
 
     $this->assertTrue($language1);
     $this->assertFalse($language2);
+  }
+
+  public function testCanGetLocaleFromUrl()
+  {
+    $locale = $this->polyglotLang->getLocaleFromUrl();
+    $this->assertEquals('fr', $locale);
+
+    $request = $this->mockRequest();
+    $request->shouldReceive('segment')->with(1)->andReturn('ds');
+    $this->app['request'] = $request;
+
+    $lang = new Polyglot\Language($this->app);
+    $this->assertEquals('fr', $lang->getLocaleFromUrl());
+  }
+
+  public function testCanGetRoutesPrefix()
+  {
+    $prefix = $this->polyglotLang->getRoutesPrefix(array('before' => 'auth'));
+    $this->assertEquals(array('before' => 'auth'), $prefix);
+
+    $this->app['request'] = clone $this->mockRequest('en');
+    $lang = new Polyglot\Language($this->app);
+    $this->assertEquals(array('before' => 'auth', 'prefix' => 'en'), $lang->getRoutesPrefix(array('before' => 'auth')));
   }
 }

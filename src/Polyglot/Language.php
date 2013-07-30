@@ -10,6 +10,13 @@ use Illuminate\Support\Str;
 class Language
 {
   /**
+   * The IoC Container
+   *
+   * @var Container
+   */
+  protected $app;
+
+  /**
    * Build the language class
    *
    * @param Container $app
@@ -55,6 +62,10 @@ class Language
   public function set($locale)
   {
     $locale = $this->sanitize($locale);
+
+    if (!method_exists($this->app, 'setLocale')) {
+      return $this->app['translator']->setLocale($locale);
+    }
 
     return $this->app->setLocale($locale);
   }
