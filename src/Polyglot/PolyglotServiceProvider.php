@@ -21,6 +21,17 @@ class PolyglotServiceProvider extends ServiceProvider
   }
 
   /**
+   * Boot Polyglot
+   *
+   * @return void
+   */
+  public function boot()
+  {
+    // Set locale automatically
+    $this->app['polyglot.lang']->locale();
+  }
+
+  /**
    * Get the services provided by the provider.
    *
    * @return array
