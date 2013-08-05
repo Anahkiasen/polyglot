@@ -7,17 +7,17 @@
     "packages": [
         {
             "name": "illuminate/container",
-            "version": "v4.0.5",
+            "version": "v4.0.6",
             "target-dir": "Illuminate/Container",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "v4.0.5"
+                "reference": "v4.0.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/v4.0.5",
-                "reference": "v4.0.5",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/v4.0.6",
+                "reference": "v4.0.6",
                 "shasum": ""
             },
             "require": {
@@ -47,21 +47,21 @@
                     "email": "taylorotwell@gmail.com"
                 }
             ],
-            "time": "2013-05-28 00:50:14"
+            "time": "2013-07-31 14:49:48"
         },
         {
             "name": "illuminate/support",
-            "version": "v4.0.5",
+            "version": "v4.0.6",
             "target-dir": "Illuminate/Support",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "v4.0.5"
+                "reference": "v4.0.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/v4.0.5",
-                "reference": "v4.0.5",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/v4.0.6",
+                "reference": "v4.0.6",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                     "email": "taylorotwell@gmail.com"
                 }
             ],
-            "time": "2013-06-11 00:56:49"
+            "time": "2013-08-02 13:31:18"
         }
     ],
     "packages-dev": [
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "437735be9c1760994c401f8752301f187b0954ba"
+                "reference": "dcc8e7bda1b011a7e152b53abc58f2cb7a7cb0c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/437735be9c1760994c401f8752301f187b0954ba",
-                "reference": "437735be9c1760994c401f8752301f187b0954ba",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/dcc8e7bda1b011a7e152b53abc58f2cb7a7cb0c5",
+                "reference": "dcc8e7bda1b011a7e152b53abc58f2cb7a7cb0c5",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2013-07-24 12:43:00"
+            "time": "2013-08-01 12:39:35"
         }
     ],
     "aliases": [
