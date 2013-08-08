@@ -26,10 +26,10 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 		$this->app->instance('request', $this->mockRequest());
 		$this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
 
-		Lang::setFacadeApplication($this->app);
 		Config::setFacadeApplication($this->app);
 
 		$this->app = PolyglotServiceProvider::make($this->app);
+		Lang::swap($this->app['polyglot.translator']);
 	}
 
 	/**
@@ -51,6 +51,10 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 	 */
 	public function __get($key)
 	{
+		if ($key == 'translator') {
+			return $this->app['polyglot.translator'];
+		}
+
 		$key = Str::snake($key);
 		$key = str_replace('_', '.', $key);
 
