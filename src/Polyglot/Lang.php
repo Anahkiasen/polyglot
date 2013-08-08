@@ -119,38 +119,4 @@ class Lang extends Translator
 
     return $this->valid($locale) ? $locale : $fallback;
   }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////////// TASKS //////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  ////////////////////////////////////////////////////////////////////
-  ////////////////////////////// ELOQUENT ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Apply the correct language constraint to an array of eager load relationships
-   *
-   * @return array An array of relationships
-   */
-  public function eager()
-  {
-    $locale = $this->current();
-    $relationships = array();
-
-    // Get arguments
-    $eager = func_get_args();
-    if (sizeof($eager) == 1 and is_array($eager[0])) $eager = $eager[0];
-
-    foreach ($eager as $r) {
-      if (!Str::contains($r, 'lang')) $relationships[] = $r;
-      else {
-        $relationships[$r] = function($query) use ($locale) {
-          $query->where_lang($locale);
-        };
-      }
-    }
-
-    return $relationships;
-  }
 }
