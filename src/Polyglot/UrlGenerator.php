@@ -8,13 +8,13 @@ use Illuminate\Routing\UrlGenerator as IlluminateUrlGenerator;
  */
 class UrlGenerator extends IlluminateUrlGenerator
 {
-  /**
-   * Get the locale in an URL
-   *
-   * @return string
-   */
-  public function locale()
-  {
-    return $this->request->segment(1);
-  }
+	/**
+	 * Get the locale in an URL
+	 *
+	 * @return string
+	 */
+	public function locale()
+	{
+		return $this->request->segment(1);
+	}
 }

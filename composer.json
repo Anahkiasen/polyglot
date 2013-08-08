@@ -2,12 +2,12 @@
 	"name": "anahkiasen/polyglot",
 	"description": "Laravel localization helpers and models",
 	"license": "MIT",
-  "keywords": [
-    "laravel",
-    "localization",
-    "translation",
-    "model"
-  ],
+	"keywords": [
+		"laravel",
+		"localization",
+		"translation",
+		"model"
+	],
 	"authors": [
 		{
 			"name": "Maxime Fabre",
@@ -16,8 +16,8 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-    "illuminate/container": "~4",
-    "illuminate/support": "~4"
+		"illuminate/container": "~4",
+		"illuminate/support": "~4"
 	},
 	"require-dev": {
 		"mockery/mockery": "dev-master",
@@ -25,9 +25,9 @@
 		"illuminate/database": "~4",
 		"illuminate/translation": "~4"
 	},
-  "autoload": {
-    "psr-0": {
-      "Polyglot": "src"
-    }
-  }
+	"autoload": {
+		"psr-0": {
+			"Polyglot": "src"
+		}
+	}
 }
