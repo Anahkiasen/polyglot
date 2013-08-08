@@ -3,11 +3,12 @@ namespace Polyglot;
 
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
+use Illuminate\Translation\Translator;
 
 /**
  * General localization helpers
  */
-class Language
+class Lang extends Translator
 {
   /**
    * The IoC Container
@@ -23,7 +24,9 @@ class Language
    */
   public function __construct(Container $app)
   {
-    $this->app = $app;
+    $this->app    = $app;
+    $this->loader = $app['translation.loader'];
+    $this->locale = $app['config']->get('app.locale');
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -39,17 +42,7 @@ class Language
    */
   public function active($locale)
   {
-    return $locale == $this->current();
-  }
-
-  /**
-   * Returns the current language being used
-   *
-   * @return string A language index
-   */
-  public function current()
-  {
-    return $this->app['translator']->getLocale();
+    return $locale == $this->getLocale();
   }
 
   /**
@@ -59,15 +52,36 @@ class Language
    *
    * @return string
    */
-  public function set($locale)
+  public function setLocale($locale)
   {
-    $locale = $this->sanitize($locale);
+    $this->locale = $this->sanitize($locale);
+  }
 
-    if (!method_exists($this->app, 'setLocale')) {
-      return $this->app['translator']->setLocale($locale);
+  /**
+   * Sets the locale according to the current language
+   *
+   * @param  string $locale A language string to use
+   * @return
+   */
+  public function setInternalLocale($locale = false)
+  {
+    // If nothing was given, just use current language
+    if(!$locale) {
+      $locale = $this->getLocale();
     }
 
-    return $this->app->setLocale($locale);
+    // Base table of locales
+    $this->locale = $locale;
+    $locales = array(
+      'en' => 'en_US',
+      'zh' => 'zh_CN',
+    );
+
+    // Get correct locale
+    $fallback = $locale.'_'.strtoupper($locale);
+    $locale   = array_get($locales, $locale, $fallback);
+
+    return setlocale(LC_ALL, $locale);
   }
 
   /**
@@ -87,7 +101,7 @@ class Language
    *
    * @return boolean
    */
-  public function isValid($locale)
+  public function valid($locale)
   {
     return in_array($locale, $this->getAvailable());
   }
@@ -103,76 +117,12 @@ class Language
   {
     $fallback = $this->app['config']->get('polyglot::default');
 
-    return $this->isValid($locale) ? $locale : $fallback;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////////// HELPERS ////////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Get the correct route prefix to use
-   *
-   * @return array
-   */
-  public function getRoutesPrefix($group = array())
-  {
-    $locale = $this->getLocaleFromUrl();
-    $this->set($locale);
-
-    // Return group untouched if default
-    if ($locale == $this->app['config']->get('polyglot::default')) {
-      return $group;
-    }
-
-    return array_merge($group, array('prefix' => $locale));
-  }
-
-  /**
-   * Get the locale in an URL
-   *
-   * @param  string $url
-   *
-   * @return string
-   */
-  public function getLocaleFromUrl($url = null)
-  {
-    if (!$url) {
-      $locale = $this->app['request']->segment(1);
-    }
-
-    return $this->sanitize($locale);
+    return $this->valid($locale) ? $locale : $fallback;
   }
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////////// TASKS //////////////////////////////
   ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Sets the locale according to the current language
-   *
-   * @param  string $locale A language string to use
-   * @return
-   */
-  public function locale($locale = false)
-  {
-    // If nothing was given, just use current language
-    if(!$locale) {
-      $locale = $this->current();
-    }
-
-    // Base table of locales
-    $locales = array(
-      'en' => 'en_US',
-      'zh' => 'zh_CN',
-    );
-
-    // Get correct locale
-    $fallback = $locale.'_'.strtoupper($locale);
-    $locale   = array_get($locales, $locale, $fallback);
-
-    return setlocale(LC_ALL, $locale);
-  }
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////// ELOQUENT ////////////////////////////

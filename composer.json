@@ -20,7 +20,9 @@
     "illuminate/support": "~4"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master"
+		"mockery/mockery": "dev-master",
+		"illuminate/routing": "~4",
+		"illuminate/translation": "~4"
 	},
   "autoload": {
     "psr-0": {

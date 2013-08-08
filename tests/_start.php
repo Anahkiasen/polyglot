@@ -3,6 +3,7 @@ include __DIR__.'/../vendor/autoload.php';
 
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
+use Polyglot\PolyglotServiceProvider;
 
 abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 {
@@ -19,14 +20,11 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   public function setUp()
   {
     $this->app = new Container;
+    $this->app['config']  = $this->mockConfig();
+    $this->app->instance('request', $this->mockRequest());
+    $this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
 
-    $this->app['config']     = $this->mockConfig();
-    $this->app['request']    = $this->mockRequest();
-    $this->app['translator'] = new Lang;
-
-    $this->app->bind('polyglot.lang', function($app) {
-      return new Polyglot\Language($app);
-    });
+    $this->app = PolyglotServiceProvider::make($this->app);
   }
 
   /**
@@ -65,7 +63,10 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
    */
   protected function mockRequest($segment = 'fr')
   {
-    $request = Mockery::mock('Request');
+    $request = Mockery::mock('Symfony\Component\HttpFoundation\Request');
+    $request->shouldIgnoreMissing();
+    $request->server = Mockery::mock('server')->shouldIgnoreMissing();
+    $request->shouldReceive('getBaseUrl')->andReturn($segment.'/foobar');
     $request->shouldReceive('segment')->andReturn($segment);
 
     return $request;
@@ -79,8 +80,10 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
   protected function mockConfig()
   {
     $config = Mockery::mock('Illuminate\Config\Repository');
+    $config->shouldReceive('get')->with('app.locale')->andReturn('fr');
     $config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
     $config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
+    $config->shouldReceive('package');
 
     return $config;
   }
