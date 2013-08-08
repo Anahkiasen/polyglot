@@ -2,6 +2,8 @@
 include __DIR__.'/../vendor/autoload.php';
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Polyglot\PolyglotServiceProvider;
 
@@ -23,6 +25,9 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
     $this->app['config']  = $this->mockConfig();
     $this->app->instance('request', $this->mockRequest());
     $this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
+
+    Lang::setFacadeApplication($this->app);
+    Config::setFacadeApplication($this->app);
 
     $this->app = PolyglotServiceProvider::make($this->app);
   }
@@ -83,6 +88,7 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
     $config->shouldReceive('get')->with('app.locale')->andReturn('fr');
     $config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
     $config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
+    $config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('{model}Lang');
     $config->shouldReceive('package');
 
     return $config;

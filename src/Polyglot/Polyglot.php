@@ -1,8 +1,8 @@
 <?php
 namespace Polyglot;
 
-use Lang;
-use Config;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 
 /**

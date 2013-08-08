@@ -22,6 +22,7 @@
 	"require-dev": {
 		"mockery/mockery": "dev-master",
 		"illuminate/routing": "~4",
+		"illuminate/database": "~4",
 		"illuminate/translation": "~4"
 	},
   "autoload": {
