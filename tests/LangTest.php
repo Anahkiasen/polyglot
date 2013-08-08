@@ -26,8 +26,9 @@ class LangTest extends PolyglotTests
 	{
 		$locale = $this->translator->setInternalLocale('en');
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
+		$matcher = strlen($locale) == 5 ? 'en_US' : 'LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;LC_MESSAGES=C;LC_PAPER=C;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=C;LC_IDENTIFICATION=C';
 
-		$this->assertEquals($locale, 'en_US');
+		$this->assertEquals($locale, $matcher);
 		$this->assertEquals('January', $translatedString);
 	}
 
@@ -36,8 +37,9 @@ class LangTest extends PolyglotTests
 		$this->translator->setLocale('en');
 		$locale = $this->translator->setInternalLocale();
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
+		$matcher = strlen($locale) == 5 ? 'en_US' : 'LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;LC_MESSAGES=C;LC_PAPER=C;LC_NAME=C;LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=C;LC_IDENTIFICATION=C';
 
-		$this->assertEquals($locale, 'en_US');
+		$this->assertEquals($locale, $matcher);
 		$this->assertEquals('January', $translatedString);
 	}
 
