@@ -123,7 +123,7 @@ abstract class Polyglot extends Model
 	 */
 	public function getPolyglotAttributes()
 	{
-		return array_merge($this->polyglot, ['lang']);
+		return array_merge($this->polyglot, array('lang'));
 	}
 
 	/**
