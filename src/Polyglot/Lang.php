@@ -90,7 +90,9 @@ class Lang extends Translator
 		$fallback = $locale.'_'.strtoupper($locale);
 		$locale   = array_get($locales, $locale, $fallback);
 
-		return setlocale(LC_ALL, $locale);
+		setlocale(LC_ALL, $locale);
+
+		return setlocale(LC_ALL, 0);
 	}
 
 	/**

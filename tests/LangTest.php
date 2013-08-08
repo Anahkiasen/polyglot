@@ -27,7 +27,7 @@ class LangTest extends PolyglotTests
 		$locale = $this->translator->setInternalLocale('en');
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
 
-		$this->assertContains($locale, array('en_US.UTF8', 'en_US'));
+		$this->assertEquals($locale, 'en_US');
 		$this->assertEquals('January', $translatedString);
 	}
 
@@ -37,7 +37,7 @@ class LangTest extends PolyglotTests
 		$locale = $this->translator->setInternalLocale();
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
 
-		$this->assertContains($locale, array('en_US.UTF8', 'en_US'));
+		$this->assertEquals($locale, 'en_US');
 		$this->assertEquals('January', $translatedString);
 	}
 
