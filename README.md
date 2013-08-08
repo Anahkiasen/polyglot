@@ -71,8 +71,7 @@ Per example `Article::withLang()->get()` will return Articles with `fr` autoload
 To localize your routes, you need to set the `locales` option in your config file, per example `array('fr', 'en')`. Now you may define your routes as such :
 
 ```php
-$prefix = Polyglot\Facades\Language::getRoutesPrefix();
-Route::group($prefix, function() {
+Route::groupLocale(['before' => 'auth'], function() {
   Route::get('/', 'HomeController@index');
   Route::get('articles', 'ArticlesController@index');
   // etc...
@@ -82,4 +81,17 @@ Route::group($prefix, function() {
 Now you can access `/fr` and `/fr/articles`, or `/en` and `/en/articles` – Polyglot will recognize the locale in the URL and automatically set your app in that language.
 There is also a `default` option in the config file, setting that option to a locale like `'default' => 'fr'` will make the root URLs point to that locale. So accessing `/articles` without prefixing it with a locale would render the page in french.
 
-Note that you can pass an additional group to the `Language::getRoutesPrefix`, like this : `Language::getRoutesPrefix(array('before' => 'auth'))`.
+Note that you can pass an additional group to the `Route::getRoutesPrefix`, like this : `Route::getRoutesPrefix(array('before' => 'auth'))`.
+
+## Locales helpers
+
+Polyglot also provide various locale helpers hooked into the `Lang` and `URL` class you know and love :
+
+```php
+URL::locale() // Returns the locale in the current URL
+
+Lang::active('fr') // Check if fr is the current locale
+Lang::setInternalLocale('fr') // Set both the locale with the Translator class and setlocale method
+Lang::valid('fr') // Check if a locale is valid
+Lang::sanitize('fr') // Returns the locale if valid, or the default locale if not
+```
