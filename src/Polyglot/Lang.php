@@ -45,6 +45,16 @@ class Lang extends Translator
 	}
 
 	/**
+	 * Get the default locale
+	 *
+	 * @return string
+	 */
+	public function defaultLocale()
+	{
+		return $this->app['config']->get('polyglot::default');
+	}
+
+	/**
 	 * Change the current language
 	 *
 	 * @param string $locale The language to change to
@@ -114,7 +124,7 @@ class Lang extends Translator
 	 */
 	public function sanitize($locale)
 	{
-		$fallback = $this->app['config']->get('polyglot::default');
+		$fallback = $this->defaultLocale();
 
 		return $this->valid($locale) ? $locale : $fallback;
 	}
