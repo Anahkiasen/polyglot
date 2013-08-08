@@ -29,6 +29,30 @@ class Lang extends Translator
 	}
 
 	////////////////////////////////////////////////////////////////////
+	/////////////////////////// TRANSLATIONS ///////////////////////////
+	////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Get the translation for the given key, or fallback to default locale
+	 *
+	 * @param  string  $key
+	 * @param  array   $replace
+	 * @param  string  $locale
+	 * @return string
+	 */
+	public function get($key, array $replace = array(), $locale = null)
+	{
+		// Get translation and fallback
+		$default     = $this->defaultLocale();
+		$translation = parent::get($key, $replace, $locale);
+		if ($translation == $key and $default !== $this->locale) {
+			return parent::get($key, $replace, $this->defaultLocale());
+		}
+
+		return $translation;
+	}
+
+	////////////////////////////////////////////////////////////////////
 	///////////////////////////// LOCALES //////////////////////////////
 	////////////////////////////////////////////////////////////////////
 
