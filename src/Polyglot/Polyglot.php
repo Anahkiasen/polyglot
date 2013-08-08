@@ -1,9 +1,9 @@
 <?php
 namespace Polyglot;
 
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Abstract model that eases the localization of model
@@ -85,7 +85,7 @@ abstract class Polyglot extends Model
    */
   public function lang($lang = null)
   {
-    if(!$lang) {
+    if (!$lang) {
       $lang = Lang::getLocale();
     }
 
@@ -135,7 +135,7 @@ abstract class Polyglot extends Model
    */
   public function __isset($key)
   {
-    if($this->polyglot) {
+    if ($this->polyglot) {
       return in_array($key, $this->getPolyglotAttributes());
     }
 
@@ -174,7 +174,7 @@ abstract class Polyglot extends Model
    */
   public function localize($localization)
   {
-    if(!$localization) {
+    if (!$localization) {
       return false;
     }
 
@@ -220,6 +220,7 @@ abstract class Polyglot extends Model
 
     // Localize
     $eager = call_user_func_array(array(App::make('polyglot.lang'), 'eager'), $relations);
+
     return $query->with($eager);
   }
 

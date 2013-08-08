@@ -2,7 +2,6 @@
 namespace Polyglot;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\Str;
 use Illuminate\Translation\Translator;
 
 /**
@@ -66,7 +65,7 @@ class Lang extends Translator
   public function setInternalLocale($locale = false)
   {
     // If nothing was given, just use current language
-    if(!$locale) {
+    if (!$locale) {
       $locale = $this->getLocale();
     }
 
