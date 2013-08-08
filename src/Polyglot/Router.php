@@ -37,7 +37,15 @@ class Router extends IlluminateRouter
 	 */
 	public function getRoutesPrefix($group = array())
 	{
+		// Get locale
 		$locale = $this->container['url']->locale();
+
+		// Cancel if invalid locale in URL
+		if (!$this->container['translator']->valid($locale)) {
+			return $group;
+		}
+
+		// Set locale on translator
 		$this->container['translator']->setLocale($locale);
 
 		// Return group untouched if default
