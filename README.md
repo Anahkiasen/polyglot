@@ -81,8 +81,6 @@ Route::groupLocale(['before' => 'auth'], function() {
 Now you can access `/fr` and `/fr/articles`, or `/en` and `/en/articles` – Polyglot will recognize the locale in the URL and automatically set your app in that language.
 There is also a `default` option in the config file, setting that option to a locale like `'default' => 'fr'` will make the root URLs point to that locale. So accessing `/articles` without prefixing it with a locale would render the page in french.
 
-Note that you can pass an additional group to the `Route::getRoutesPrefix`, like this : `Route::getRoutesPrefix(array('before' => 'auth'))`.
-
 ## Locales helpers
 
 Polyglot also provide various locale helpers hooked into the `Lang` and `URL` class you know and love :
