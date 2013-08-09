@@ -1,18 +1,18 @@
 
 
 Code Coverage Report 
-  2013-08-09 02:05:36
+  2013-08-09 18:33:34
 
  Summary: 
-  Classes: 25.00% (1/4)
-  Methods: 62.50% (15/24)
-  Lines:   45.83% (55/120)
+  Classes: 50.00% (2/4)
+  Methods: 73.08% (19/26)
+  Lines:   48.78% (60/123)
 
 \Polyglot::Lang
-  Methods:  80.00% ( 8/10)   Lines:  79.31% ( 23/ 29)
+  Methods:  90.00% ( 9/10)   Lines:  82.76% ( 24/ 29)
 \Polyglot::Polyglot
   Methods:  66.67% ( 8/12)   Lines:  20.00% ( 21/105)
 \Polyglot::Router
-  Methods: 100.00% ( 2/ 2)   Lines:  92.31% ( 12/ 13)
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 13/ 13)
 \Polyglot::UrlGenerator
-  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  1/  1)
+  Methods: 100.00% ( 3/ 3)   Lines: 100.00% (  4/  4)

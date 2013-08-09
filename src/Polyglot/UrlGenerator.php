@@ -17,4 +17,32 @@ class UrlGenerator extends IlluminateUrlGenerator
 	{
 		return $this->request->segment(1);
 	}
+
+	/**
+	 * Generate a absolute URL to the given language
+	 *
+	 * @param  string  $language
+	 * @param  mixed   $parameters
+	 * @param  bool    $secure
+	 * @return string
+	 */
+	public function language($language, $parameters = array(), $secure = null)
+	{
+		return $this->to($language, $parameters, $secure);
+	}
+
+	/**
+	 * Generate a absolute URL to the same page in another language
+	 *
+	 * @param  string  $language
+	 * @param  mixed   $parameters
+	 * @param  bool    $secure
+	 * @return string
+	 */
+	public function switchLanguage($language, $parameters = array(), $secure = null)
+	{
+		$language = $language.$this->request->getPathInfo();
+
+		return $this->to($language, $parameters, $secure);
+	}
 }

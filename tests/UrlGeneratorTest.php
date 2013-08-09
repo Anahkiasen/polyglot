@@ -6,10 +6,32 @@ class UrlGeneratorTest extends PolyglotTests
 		$locale = $this->url->locale();
 		$this->assertEquals('fr', $locale);
 
-		$this->app['request'] = $this->mockRequest();
-		$this->app['request']->shouldReceive('segment')->with(1)->andReturn('ds');
+		$request = $this->mockRequest();
+		$request->shouldReceive('segment')->with(1)->andReturn('ds');
+		$this->mockUrl($request);
 
-		$this->url->setRequest($this->app['request']);
 		$this->assertEquals('fr', $this->url->locale());
+	}
+
+	public function testCanGetUrlToLanguage()
+	{
+		$request = $this->mockRequest();
+		$request->shouldReceive('getScheme')->andReturn('http');
+		$request->shouldReceive('root')->andReturn('http://localhost');
+		$request->shouldReceive('getPathInfo')->andReturn('/admin/users');
+		$this->mockUrl($request);
+
+		$this->assertEquals('http://localhost/en', $this->url->language('en'));
+	}
+
+	public function testCanGetUrlToSamePageInAnotherLanguage()
+	{
+		$request = $this->mockRequest();
+		$request->shouldReceive('getScheme')->andReturn('http');
+		$request->shouldReceive('root')->andReturn('http://localhost');
+		$request->shouldReceive('getPathInfo')->andReturn('/admin/users');
+		$this->mockUrl($request);
+
+		$this->assertEquals('http://localhost/en/admin/users', $this->url->switchLanguage('en'));
 	}
 }
