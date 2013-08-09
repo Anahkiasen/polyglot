@@ -23,6 +23,14 @@ class RouterTest extends PolyglotTests
 		$this->assertEquals(array('before' => 'auth', 'prefix' => array('en', 'foo')), $prefix);
 	}
 
+	public function testReturnGroupIfLocaleIsInvalid()
+	{
+		$this->app['request'] = $this->mockRequest('admin');
+
+		$prefix = $this->router->getRoutesPrefix(array('before' => 'auth'));
+		$this->assertEquals(array('before' => 'auth'), $prefix);
+	}
+
 	public function testCanCreateActualGroups()
 	{
 		$this->app['request'] = $this->mockRequest('en');

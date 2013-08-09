@@ -15,6 +15,15 @@ class LangTest extends PolyglotTests
 		$this->assertTrue($this->translator->active('en'));
 	}
 
+	public function testCanGetFallbackLocale()
+	{
+		$this->config = $this->mockConfig()->shouldReceive('get')->with('polyglot::fallback')->andReturn('es')->mock();
+		$this->assertEquals('es', $this->translator->fallbackLocale());
+
+		$this->config = $this->mockConfig()->shouldReceive('get')->with('polyglot::fallback')->andReturn(null)->mock();
+		$this->assertEquals('fr', $this->translator->fallbackLocale());
+	}
+
 	public function testCantSetUnexistingLocales()
 	{
 		$this->translator->setLocale('ds');

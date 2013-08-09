@@ -2,6 +2,7 @@
 include __DIR__.'/../vendor/autoload.php';
 
 use Illuminate\Container\Container;
+use Polyglot\UrlGenerator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -61,9 +62,36 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 		return $this->app[$key];
 	}
 
+	/**
+	 * Set an instance on the container
+	 *
+	 * @param string $key
+	 * @param object $value
+	 */
+	public function __set($key, $value)
+	{
+		$this->app[$key] = $value;
+	}
+
 	////////////////////////////////////////////////////////////////////
-	////////////////////////////// INSTANCES //////.////////////////////
+	////////////////////////////// INSTANCES ///////////////////////////
 	////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Get a new instance of UrlGenerator with a mock Request
+	 *
+	 * @param  Request $request
+	 *
+	 * @return UrlGenerator
+	 */
+	protected function mockUrl($request)
+	{
+		$routes = $this->app['router']->getRoutes();
+		$this->app['request'] = $request;
+		$this->app['url']     = new UrlGenerator($routes, $request);
+
+		return $this->app['url'];
+	}
 
 	/**
 	 * Mock Request
