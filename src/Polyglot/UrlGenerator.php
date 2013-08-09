@@ -41,8 +41,9 @@ class UrlGenerator extends IlluminateUrlGenerator
 	 */
 	public function switchLanguage($language, $parameters = array(), $secure = null)
 	{
-		$language = $language.$this->request->getPathInfo();
+		$current = $this->request->getPathInfo();
+		$current = preg_replace('#^/([a-z]{2}/)?#', null, $current);
 
-		return $this->to($language, $parameters, $secure);
+		return $this->to($language.'/'.$current, $parameters, $secure);
 	}
 }

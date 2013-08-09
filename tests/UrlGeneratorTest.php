@@ -34,4 +34,15 @@ class UrlGeneratorTest extends PolyglotTests
 
 		$this->assertEquals('http://localhost/en/admin/users', $this->url->switchLanguage('en'));
 	}
+
+	public function testCanGetUrlToSamePageInAnotherLanguageWhenInALanguage()
+	{
+		$request = $this->mockRequest();
+		$request->shouldReceive('getScheme')->andReturn('http');
+		$request->shouldReceive('root')->andReturn('http://localhost');
+		$request->shouldReceive('getPathInfo')->andReturn('/fr/admin/users');
+		$this->mockUrl($request);
+
+		$this->assertEquals('http://localhost/en/admin/users', $this->url->switchLanguage('en'));
+	}
 }
