@@ -4,6 +4,10 @@
 	// Leave empty to force the use of locales prefixes in URLs
 	'default' => 'en',
 
+	// The fallback locale for translations
+	// If null, the default locale is used
+	'fallback' => null,
+
 	// The available locales
 	'locales' => array(),
 

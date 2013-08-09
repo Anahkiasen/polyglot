@@ -33,7 +33,7 @@ class Lang extends Translator
 	////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Get the translation for the given key, or fallback to default locale
+	 * Get the translation for the given key, or fallback to fallback locale
 	 *
 	 * @param  string  $key
 	 * @param  array   $replace
@@ -43,10 +43,10 @@ class Lang extends Translator
 	public function get($key, array $replace = array(), $locale = null)
 	{
 		// Get translation and fallback
-		$default     = $this->defaultLocale();
+		$fallback    = $this->fallbackLocale();
 		$translation = parent::get($key, $replace, $locale);
-		if ($translation == $key and $default !== $this->locale) {
-			return parent::get($key, $replace, $this->defaultLocale());
+		if ($translation == $key and $fallback !== $this->locale) {
+			return parent::get($key, $replace, $fallback);
 		}
 
 		return $translation;
@@ -76,6 +76,16 @@ class Lang extends Translator
 	public function defaultLocale()
 	{
 		return $this->app['config']->get('polyglot::default');
+	}
+
+	/**
+	 * Get the fallback locale
+	 *
+	 * @return string
+	 */
+	public function fallbackLocale()
+	{
+		return $this->app['config']->get('polyglot::fallback') ?: $this->app['config']->get('polyglot::default');
 	}
 
 	/**
