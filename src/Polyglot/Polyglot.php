@@ -3,7 +3,7 @@ namespace Polyglot;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Lang as LangFacade;
 
 /**
  * Abstract model that eases the localization of model
@@ -51,7 +51,7 @@ abstract class Polyglot extends Model
 			}
 
 			// Get the current lang and Lang model
-			$lang      = array_get($translated, 'lang', Lang::getLocale());
+			$lang      = array_get($translated, 'lang', LangFacade::getLocale());
 			$langModel = $model->$lang;
 			$translated['lang'] = $lang;
 
@@ -86,7 +86,7 @@ abstract class Polyglot extends Model
 	public function lang($lang = null)
 	{
 		if (!$lang) {
-			$lang = Lang::getLocale();
+			$lang = LangFacade::getLocale();
 		}
 
 		return $this->$lang();
@@ -154,7 +154,7 @@ abstract class Polyglot extends Model
 		// If the attribute is set to be automatically localized
 		if ($this->polyglot) {
 			if (in_array($key, $this->polyglot)) {
-				$lang = Lang::getLocale();
+				$lang = LangFacade::getLocale();
 
 				return $this->$lang ? $this->$lang->$key : null;
 			}
@@ -215,7 +215,7 @@ abstract class Polyglot extends Model
 		$query     = array_shift($relations);
 
 		if (empty($relations)) {
-			$relations = array(Lang::getLocale());
+			$relations = array(LangFacade::getLocale());
 		}
 
 		// Localize
