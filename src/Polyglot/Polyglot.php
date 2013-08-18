@@ -1,6 +1,7 @@
 <?php
 namespace Polyglot;
 
+use App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang as LangFacade;
@@ -218,10 +219,7 @@ abstract class Polyglot extends Model
 			$relations = array(LangFacade::getLocale());
 		}
 
-		// Localize
-		$eager = call_user_func_array(array(App::make('polyglot.lang'), 'eager'), $relations);
-
-		return $query->with($eager);
+		return $query->with($relations);
 	}
 
 	////////////////////////////////////////////////////////////////////
