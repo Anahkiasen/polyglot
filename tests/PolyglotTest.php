@@ -15,5 +15,6 @@ class PolyglotTest extends PolyglotTests
 		$article = new Article;
 
 		$this->assertTrue(isset($article->name));
+		$this->assertTrue(isset($article->agb_accepted));
 	}
 }

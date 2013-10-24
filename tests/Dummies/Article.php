@@ -16,4 +16,9 @@ class Article extends Polyglot
 	{
 		return new $related;
 	}
+
+	public function getAgbAcceptedAttribute()
+	{
+		return 1;
+	}
 }
