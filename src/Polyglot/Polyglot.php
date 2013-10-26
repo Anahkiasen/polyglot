@@ -137,7 +137,9 @@ abstract class Polyglot extends Model
 	public function __isset($key)
 	{
 		if ($this->polyglot) {
-			if(in_array($key, $this->getPolyglotAttributes())) return true;
+			if(in_array($key, $this->getPolyglotAttributes())) {
+				return true;
+			}
 		}
 
 		return parent::__isset($key);
