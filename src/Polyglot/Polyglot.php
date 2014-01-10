@@ -279,9 +279,7 @@ abstract class Polyglot extends Model
 
 		// Get class name
 		$model   = get_called_class();
-		$model   = str_replace('\\', '/', $model);
-		$model   = basename($model);
 
-		return str_replace('{model}', $model, $pattern);
+        return str_replace('{model}', $model, $pattern);
 	}
 }
