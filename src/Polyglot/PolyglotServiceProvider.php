@@ -74,13 +74,13 @@ class PolyglotServiceProvider extends ServiceProvider
 	public function bindClasses(Container $app)
 	{
 		$app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
-
+        
 		$app->singleton('polyglot.translator', function($app) {
 			return new Lang($app);
 		});
 
-		$app->singleton('router', function ($app) {
-			return new Router($app);
+        $app->singleton('router', function ($app) {
+			return new Router($app['events'], $app);
 		});
 
 		$app->singleton('url', function ($app) {
