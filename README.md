@@ -8,6 +8,8 @@ Polyglot is a localization helper for the Laravel framework, it's an helper clas
 
 To install it, do `composer require anahkiasen/polyglot:dev-master`, then add `Polyglot\PolyglotServiceProvider` to the `providers` array in `app/config/app.php`.
 
+Publish config to your laravel app : `php artisan config:publish anahkiasen/polyglot`
+
 ## Model localization
 
 Setting a model as polyglot will allow you to make fields speak several languages. Polyglot requires you to separate common fields from localized ones assuming the following common pattern :
