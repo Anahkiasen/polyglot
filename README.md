@@ -33,7 +33,7 @@ From there you can either access any language easily by doing the following : `$
 **Or** you can add the following parameter to your model and let Polyglot automatically translate attributes.
 
 ```php
-class Article
+class Article extends Polyglot
 {
   protected $polyglot = ['title', 'content'];
 }
