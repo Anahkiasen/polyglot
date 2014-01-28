@@ -103,54 +103,14 @@ abstract class Polyglot extends Model
 		return $this->hasMany($this->getLangClass());
 	}
 
-	public function fr()
-	{
-		return $this->hasOne($this->getLangClass())->whereLang('fr');
-	}
-
-    public function en()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('en');
-    }
-
-    public function es()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('es');
-    }
-
-    public function pt()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('pt');
-    }
-
-    public function de()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('de');
-    }
-
-    public function it()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('it');
-    }
-
-    public function pl()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('pl');
-    }
-
-    public function tr()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('tr');
-    }
-
-    public function sv()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('sv');
-    }
-
-    public function zn()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('zn');
+    public function __call($langOrMethod, $parameters)
+    {        
+        if (in_array($langOrMethod, Config::get('polyglot::locales')))
+        {
+            return $this->hasOne($this->getLangClass())->whereLang($langOrMethod);
+        }
+        
+        return parent::__call($langOrMethod, $parameters);
     }
 
 	////////////////////////////////////////////////////////////////////
