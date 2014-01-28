@@ -155,7 +155,16 @@ abstract class Polyglot extends Model
 	{
 		// If the attribute is set to be automatically localized
 		if ($this->polyglot) {
-			if (in_array($key, $this->polyglot)) {
+			$camelKey = camel_case($key);
+
+            if ( in_array( $camelKey, Config::get('polyglot::locales') ) ) {
+                if( ! array_key_exists($key, $this->relations) )
+                {
+                    return $this->getRelationshipFromMethod($key, $camelKey);
+                }
+            }
+            
+            if (in_array($key, $this->polyglot)) {
 				$lang = LangFacade::getLocale();
 
 				return $this->$lang ? $this->$lang->$key : null;
