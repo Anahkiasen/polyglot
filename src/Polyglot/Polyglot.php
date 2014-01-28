@@ -105,11 +105,10 @@ abstract class Polyglot extends Model
 
     public function __call($langOrMethod, $parameters)
     {        
-        if (in_array($langOrMethod, Config::get('polyglot::locales')))
-        {
+        if (in_array($langOrMethod, Config::get('polyglot::locales'))) {
             return $this->hasOne($this->getLangClass())->whereLang($langOrMethod);
         }
-        
+
         return parent::__call($langOrMethod, $parameters);
     }
 
