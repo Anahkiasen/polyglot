@@ -103,54 +103,13 @@ abstract class Polyglot extends Model
 		return $this->hasMany($this->getLangClass());
 	}
 
-	public function fr()
-	{
-		return $this->hasOne($this->getLangClass())->whereLang('fr');
-	}
+    public function __call($langOrMethod, $parameters)
+    {        
+        if (in_array($langOrMethod, Config::get('polyglot::locales'))) {
+            return $this->hasOne($this->getLangClass())->whereLang($langOrMethod);
+        }
 
-    public function en()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('en');
-    }
-
-    public function es()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('es');
-    }
-
-    public function pt()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('pt');
-    }
-
-    public function de()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('de');
-    }
-
-    public function it()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('it');
-    }
-
-    public function pl()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('pl');
-    }
-
-    public function tr()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('tr');
-    }
-
-    public function sv()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('sv');
-    }
-
-    public function zn()
-    {
-        return $this->hasOne($this->getLangClass())->whereLang('zn');
+        return parent::__call($langOrMethod, $parameters);
     }
 
 	////////////////////////////////////////////////////////////////////
@@ -196,7 +155,16 @@ abstract class Polyglot extends Model
 	{
 		// If the attribute is set to be automatically localized
 		if ($this->polyglot) {
-			if (in_array($key, $this->polyglot)) {
+			$camelKey = camel_case($key);
+
+            if ( in_array( $camelKey, Config::get('polyglot::locales') ) ) {
+                if( ! array_key_exists($key, $this->relations) )
+                {
+                    return $this->getRelationshipFromMethod($key, $camelKey);
+                }
+            }
+            
+            if (in_array($key, $this->polyglot)) {
 				$lang = LangFacade::getLocale();
 
 				return $this->$lang ? $this->$lang->$key : null;

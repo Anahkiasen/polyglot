@@ -2,6 +2,7 @@
 namespace Polyglot;
 
 use Illuminate\Routing\UrlGenerator as IlluminateUrlGenerator;
+use Illuminate\Support\Facades\Lang as LangFacade;
 
 /**
  * An UrlGenerator with localization capacities
@@ -15,7 +16,7 @@ class UrlGenerator extends IlluminateUrlGenerator
 	 */
 	public function locale()
 	{
-		return $this->request->segment(1);
+		return LangFacade::getLocale();
 	}
 
 	/**
