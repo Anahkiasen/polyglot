@@ -103,56 +103,6 @@ abstract class Polyglot extends Model
 		return $this->hasMany($this->getLangClass());
 	}
 
-	public function fr()
-	{
-		return $this->hasOne($this->getLangClass())->whereLang('fr');
-	}
-
-		public function en()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('en');
-		}
-
-		public function es()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('es');
-		}
-
-		public function pt()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('pt');
-		}
-
-		public function de()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('de');
-		}
-
-		public function it()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('it');
-		}
-
-		public function pl()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('pl');
-		}
-
-		public function tr()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('tr');
-		}
-
-		public function sv()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('sv');
-		}
-
-		public function zn()
-		{
-				return $this->hasOne($this->getLangClass())->whereLang('zn');
-		}
-
 	////////////////////////////////////////////////////////////////////
 	////////////////////////////// ATTRIBUTES //////////////////////////
 	////////////////////////////////////////////////////////////////////
@@ -165,6 +115,23 @@ abstract class Polyglot extends Model
 	public function getPolyglotAttributes()
 	{
 		return array_merge($this->polyglot, array('lang'));
+	}
+
+	/**
+	 * Handle polyglot dynamic method calls for locale relations.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
+	 */
+	public function __call($method, $parameters)
+	{
+		// If the model supports the locale, load it
+		if (in_array($method, $this->getLocales())) {
+			return $this->hasOne($this->getLangClass())->whereLang($method);
+		}
+
+		return parent::__call($method, $parameters);
 	}
 
 	/**
@@ -194,6 +161,17 @@ abstract class Polyglot extends Model
 	 */
 	public function __get($key)
 	{
+		// If the relation has been loaded already, return it
+		if (array_key_exists($key, $this->relations)) {
+			return $this->relations[$key];
+		}
+
+		// If the model supports the locale, load and return it
+		if (in_array($key, $this->getLocales())) {
+			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
+			return $this->relations[$key] = $relation->getResults();
+		}
+
 		// If the attribute is set to be automatically localized
 		if ($this->polyglot) {
 			if (in_array($key, $this->polyglot)) {
@@ -282,5 +260,15 @@ abstract class Polyglot extends Model
 		$model = class_basename($model);
 
 		return str_replace('{model}', $model, $pattern);
+	}
+
+	/**
+	 * Get an array of supported locales
+	 *
+	 * @return array
+	 */
+	protected function getLocales()
+	{
+		return Config::get('polyglot::locales');
 	}
 }
