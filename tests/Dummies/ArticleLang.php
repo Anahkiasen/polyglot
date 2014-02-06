@@ -5,7 +5,7 @@ class ArticleLang extends Model
 {
 	public function whereLang($lang)
 	{
-		$relation = Mockery::mock('relation');
+		$relation = Mockery::mock('Illuminate\Database\Eloquent\Relations\Relation');
 		$relation->shouldReceive('getResults')->andReturnUsing(function() use ($relation) {
 			return $relation;
 		});

@@ -22,8 +22,10 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 	 */
 	public function setUp()
 	{
+		date_default_timezone_set('Europe/London');
 		$this->app = new Container;
 		$this->app['config']  = $this->mockConfig();
+		$this->app['events']  = Mockery::mock('Illuminate\Events\Dispatcher');
 		$this->app->instance('request', $this->mockRequest());
 		$this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
 
