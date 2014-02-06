@@ -12,7 +12,7 @@ class Article extends Polyglot
 	 *
 	 * @return object
 	 */
-	public function hasOne($related, $foreignKey = NULL)
+	public function hasOne($related, $foreignKey = null, $localKey = null)
 	{
 		return new $related;
 	}
