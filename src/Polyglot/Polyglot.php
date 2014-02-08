@@ -1,7 +1,6 @@
 <?php
 namespace Polyglot;
 
-use App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang as LangFacade;
@@ -25,7 +24,7 @@ abstract class Polyglot extends Model
 	 */
 	protected static function boot()
 	{
-		static::saving(function($model) {
+		static::saving(function ($model) {
 
 			// Cancel if not localized
 			$hasPolyglotAttributes = $model->getPolyglotAttributes();
@@ -144,7 +143,7 @@ abstract class Polyglot extends Model
 	public function __isset($key)
 	{
 		if ($this->polyglot) {
-			if(in_array($key, $this->getPolyglotAttributes())) {
+			if (in_array($key, $this->getPolyglotAttributes())) {
 				return true;
 			}
 		}

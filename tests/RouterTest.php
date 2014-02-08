@@ -40,7 +40,7 @@ class RouterTest extends PolyglotTestCase
 		$this->app['request'] = $this->mockRequest('en');
 		$router = $this->router;
 
-		$this->router->groupLocale(array('before' => 'auth'), function() use ($router) {
+		$this->router->groupLocale(array('before' => 'auth'), function () use ($router) {
 			$router->get('foobar', 'foobar');
 		});
 
@@ -56,7 +56,7 @@ class RouterTest extends PolyglotTestCase
 		$this->app['request'] = $this->mockRequest('en');
 		$router = $this->router;
 
-		$this->router->groupLocale(function() use ($router) {
+		$this->router->groupLocale(function () use ($router) {
 			$router->get('foobar', 'foobar');
 		});
 

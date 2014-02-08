@@ -75,7 +75,7 @@ class PolyglotServiceProvider extends ServiceProvider
 	{
 		$app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
 
-		$app->singleton('polyglot.translator', function($app) {
+		$app->singleton('polyglot.translator', function ($app) {
 			return new Lang($app);
 		});
 
@@ -86,7 +86,7 @@ class PolyglotServiceProvider extends ServiceProvider
 		$app->singleton('url', function ($app) {
 			$routes = $app['router']->getRoutes();
 
-			return new UrlGenerator($routes, $app->rebinding('request', function($app, $request) {
+			return new UrlGenerator($routes, $app->rebinding('request', function ($app, $request) {
 				$app['url']->setRequest($request);
 			}));
 		});
