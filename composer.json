@@ -26,8 +26,8 @@
 		"illuminate/translation": "~4"
 	},
 	"autoload": {
-		"psr-0": {
-			"Polyglot": "src"
+		"psr-4": {
+			"Polyglot\\": "src/Polyglot"
 		}
 	}
 }
