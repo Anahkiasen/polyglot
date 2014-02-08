@@ -44,7 +44,7 @@ class RouterTest extends PolyglotTests
 			$route = $r;
 		}
 
-		$this->assertEquals('/en/foobar', $route->getPath());
+		$this->assertEquals('en/foobar', $route->getPath());
 	}
 
 	public function testCanCreateGroupsWithoutArrays()
@@ -60,6 +60,6 @@ class RouterTest extends PolyglotTests
 			$route = $r;
 		}
 
-		$this->assertEquals('/en/foobar', $route->getPath());
+		$this->assertEquals('en/foobar', $route->getPath());
 	}
 }
