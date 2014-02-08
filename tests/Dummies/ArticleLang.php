@@ -1,4 +1,7 @@
 <?php
+namespace Polyglot\Dummies;
+
+use Mockery;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticleLang extends Model

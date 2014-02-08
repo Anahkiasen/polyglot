@@ -1,6 +1,10 @@
 # Polyglot
 
-[![Build Status](https://travis-ci.org/Anahkiasen/polyglot.png)](https://travis-ci.org/Anahkiasen/polyglot)
+[![Build Status](https://travis-ci.org/Anahkiasen/polyglot.png?branch=master)](https://travis-ci.org/Anahkiasen/polyglot)
+[![Latest Stable Version](https://poser.pugx.org/anahkiasen/polyglot/v/stable.png)](https://packagist.org/packages/anahkiasen/polyglot)
+[![Total Downloads](https://poser.pugx.org/anahkiasen/polyglot/downloads.png)](https://packagist.org/packages/anahkiasen/polyglot)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Anahkiasen/polyglot/badges/quality-score.png?s=20d9a4be6695b7677c427eab73151c1a9d803044)](https://scrutinizer-ci.com/g/Anahkiasen/polyglot/)
+[![Code Coverage](https://scrutinizer-ci.com/g/Anahkiasen/polyglot/badges/coverage.png?s=f6e022cbcf1a51f82b5d9e6fb30bd1643fc70e76)](https://scrutinizer-ci.com/g/Anahkiasen/polyglot/)
 
 ## Introduction
 

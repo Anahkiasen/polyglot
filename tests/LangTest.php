@@ -1,5 +1,9 @@
 <?php
-class LangTest extends PolyglotTests
+namespace Polyglot;
+
+use Polyglot\TestCases\PolyglotTestCase;
+
+class LangTest extends PolyglotTestCase
 {
 	public function testCanChangeLanguage()
 	{

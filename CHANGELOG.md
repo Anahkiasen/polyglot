@@ -1,10 +1,11 @@
 # Changelog
 
-## 1.1.1
+## 1.2.0
 
 - Added a `fallback` language option
 - Added `URL::language` to get an URL to a language
 - Added `URL::switchLanguage` to get an URL to the current page in another language
+- Dynamic language methods
 
 ## 1.1.0
 

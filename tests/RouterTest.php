@@ -1,5 +1,9 @@
 <?php
-class RouterTest extends PolyglotTests
+namespace Polyglot;
+
+use Polyglot\TestCases\PolyglotTestCase;
+
+class RouterTest extends PolyglotTestCase
 {
 	public function testCanGetRoutesPrefix()
 	{

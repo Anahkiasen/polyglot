@@ -1,2 +1,5 @@
+# Dependencies
 vendor
-tests/coverage
+
+# Tests
+tests/.coverage

@@ -1,5 +1,10 @@
 <?php
-class PolyglotTest extends PolyglotTests
+namespace Polyglot;
+
+use Polyglot\Dummies\Article;
+use Polyglot\TestCases\PolyglotTestCase;
+
+class PolyglotTest extends PolyglotTestCase
 {
 	public function testCanGetTranslatedAttributes()
 	{

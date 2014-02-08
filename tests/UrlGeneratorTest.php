@@ -1,5 +1,9 @@
 <?php
-class UrlGeneratorTest extends PolyglotTests
+namespace Polyglot;
+
+use Polyglot\TestCases\PolyglotTestCase;
+
+class UrlGeneratorTest extends PolyglotTestCase
 {
 	public function testCanGetLocaleFromUrl()
 	{

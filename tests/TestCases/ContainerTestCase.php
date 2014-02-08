@@ -1,14 +1,16 @@
 <?php
-include __DIR__.'/../vendor/autoload.php';
+namespace Polyglot\TestCases;
 
+use Mockery;
 use Illuminate\Container\Container;
-use Polyglot\UrlGenerator;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Polyglot\PolyglotServiceProvider;
+use PHPUnit_Framework_TestCase;
+use Polyglot\UrlGenerator;
 
-abstract class PolyglotTests extends PHPUnit_Framework_TestCase
+/**
+ * Base Container-mocking class
+ */
+abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * The current IoC Container
@@ -23,16 +25,15 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		date_default_timezone_set('Europe/London');
+
+		// Create container
 		$this->app = new Container;
-		$this->app['config']  = $this->mockConfig();
-		$this->app['events']  = Mockery::mock('Illuminate\Events\Dispatcher');
+
+		// Bind mocked instances into it
+		$this->app['config'] = $this->mockConfig();
+		$this->app['events'] = $this->mockEvents();
 		$this->app->instance('request', $this->mockRequest());
 		$this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
-
-		Config::setFacadeApplication($this->app);
-
-		$this->app = PolyglotServiceProvider::make($this->app);
-		Lang::swap($this->app['polyglot.translator']);
 	}
 
 	/**
@@ -76,8 +77,18 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 	}
 
 	////////////////////////////////////////////////////////////////////
-	////////////////////////////// INSTANCES ///////////////////////////
+	////////////////////////// MOCKED INSTANCES ////////////////////////
 	////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Mock the events dispatcher
+	 *
+	 * @return Mockery
+	 */
+	protected function mockEvents()
+	{
+		return Mockery::mock('Illuminate\Events\Dispatcher');
+	}
 
 	/**
 	 * Get a new instance of UrlGenerator with a mock Request
@@ -122,7 +133,7 @@ abstract class PolyglotTests extends PHPUnit_Framework_TestCase
 		$config->shouldReceive('get')->with('app.locale')->andReturn('fr');
 		$config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
 		$config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
-		$config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('{model}Lang');
+		$config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('Polyglot\Dummies\{model}Lang');
 		$config->shouldReceive('package');
 
 		return $config;

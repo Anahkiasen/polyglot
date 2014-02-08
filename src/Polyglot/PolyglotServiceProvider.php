@@ -2,8 +2,8 @@
 namespace Polyglot;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Register the Polyglot package with the Laravel framework
@@ -74,12 +74,12 @@ class PolyglotServiceProvider extends ServiceProvider
 	public function bindClasses(Container $app)
 	{
 		$app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
-        
+
 		$app->singleton('polyglot.translator', function($app) {
 			return new Lang($app);
 		});
 
-        $app->singleton('router', function ($app) {
+		$app->singleton('router', function ($app) {
 			return new Router($app['events'], $app);
 		});
 

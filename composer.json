@@ -27,7 +27,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Polyglot\\": "src/Polyglot"
+			"Polyglot\\": ["src/Polyglot", "tests"]
 		}
 	}
 }
