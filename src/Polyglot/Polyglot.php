@@ -57,7 +57,10 @@ abstract class Polyglot extends Model
 
 			// Save original model
 			$model = $model->newInstance($attributes, $model->exists);
-			$model->save();
+
+			if ( ! $model->exists) {
+				$model->save();
+			}
 
 			// If no Lang model, create one
 			if (!$langModel) {
@@ -66,7 +69,15 @@ abstract class Polyglot extends Model
 				$model->translations()->save($langModel);
 			}
 
-			$langModel->fill($translated)->save();
+			$langModel->fill($translated);
+
+			if ($model->exists && $model->timestamps && $langModel->getDirty()) {
+				$time = $model->freshTimestamp();
+				$model->setUpdatedAt($time);
+			}
+
+			$model->save();
+			$langModel->save();
 
 			return false;
 		});
