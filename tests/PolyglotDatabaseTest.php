@@ -27,13 +27,13 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
 	}
 
 	public function testUpdateTImestampsOnSave() {
-		$article = RealArticle::first();
-		$start = $article->updated_at;
+		$article = RealArticle::first();
+		$start = $article->updated_at;
 
 		sleep(1);
 
-		$article->name = "different";
-		$article->save();
+		$article->name = "different";
+		$article->save();
 
 		$this->assertNotEquals($start.'', $article->updated_at.'');
 	}
