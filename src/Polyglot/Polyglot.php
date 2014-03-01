@@ -76,10 +76,12 @@ abstract class Polyglot extends Model
 				$model->setUpdatedAt($time);
 			}
 
-			$model->save();
-			$langModel->save();
-
-			return true;
+			if ($model->save() && $langModel->save()) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		});
 	}
 
