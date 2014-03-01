@@ -79,7 +79,7 @@ abstract class Polyglot extends Model
 			$model->save();
 			$langModel->save();
 
-			return false;
+			return true;
 		});
 	}
 
