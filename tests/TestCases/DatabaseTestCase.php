@@ -14,6 +14,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 
 	protected $app;
+	protected $capsule;
 
 	public function setUp()
 	{
@@ -62,6 +63,16 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 			$table->string('name');
 			$table->timestamps();
 		});
+
+		$schema->dropIfExists('article_langs');
+		$schema->create('article_langs', function ($table) {
+			$table->increments('id');
+			$table->string('title');
+			$table->integer('real_article_id');
+			$table->string('lang');
+		});
+
+		$this->capsule = $capsule;
 	}
 
 	/**
