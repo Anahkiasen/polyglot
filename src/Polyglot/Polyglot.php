@@ -10,270 +10,271 @@ use Illuminate\Support\Facades\Lang as LangFacade;
  */
 abstract class Polyglot extends Model
 {
-	/**
-	 * An array of polyglot attributes
-	 *
-	 * @var array
-	 */
-	protected $polyglot = array();
+    /**
+     * An array of polyglot attributes
+     *
+     * @var array
+     */
+    protected $polyglot = array();
 
-	/**
-	 * The "booting" method of the model.
-	 *
-	 * @return void
-	 */
-	protected static function boot()
-	{
-		static::saving(function ($model) {
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        static::saving(function ($model) {
 
-			$polyglotAttributes = $model->getPolyglotAttributes();
+            $polyglotAttributes = $model->getPolyglotAttributes();
 
-			// Get the model's attributes
-			$attributes = $model->getAttributes();
-			$translated = array();
+            // Get the model's attributes
+            $attributes = $model->getAttributes();
+            $translated = array();
 
-			// Extract polyglot attributes
-			foreach ($attributes as $key => $value) {
-				if (in_array($key, $polyglotAttributes)) {
-					unset($attributes[$key]);
-					unset($model[$key]);
-					$translated[$key] = $value;
-				}
-			}
+            // Extract polyglot attributes
+            foreach ($attributes as $key => $value) {
+                if (in_array($key, $polyglotAttributes)) {
+                    unset($attributes[$key]);
+                    unset($model[$key]);
+                    $translated[$key] = $value;
+                }
+            }
 
-			// If no localized attributes, continue
-			if (empty($translated)) {
-				return true;
-			}
+            // If no localized attributes, continue
+            if (empty($translated)) {
+                return true;
+            }
 
-			// Get the current lang and Lang model
-			$lang      = array_get($translated, 'lang', LangFacade::getLocale());
-			$langModel = $model->$lang;
-			$translated['lang'] = $lang;
+            // Get the current lang and Lang model
+            $lang      = array_get($translated, 'lang', LangFacade::getLocale());
+            $langModel = $model->$lang;
+            $translated['lang'] = $lang;
 
-			// Save new model
-			if ( ! $model->exists) {
-				$model->save();
-			}
+            // Save new model
+            if (! $model->exists) {
+                $model->save();
+            }
 
-			// If no Lang model, create one
-			if (!$langModel) {
-				$langModel = $model->getLangClass();
-				$langModel = new $langModel($translated);
-				$model->translations()->save($langModel);
-				$model->setRelation($lang, $langModel);
-			}
+            // If no Lang model, create one
+            if (!$langModel) {
+                $langModel = $model->getLangClass();
+                $langModel = new $langModel($translated);
+                $model->translations()->save($langModel);
+                $model->setRelation($lang, $langModel);
+            }
 
-			$langModel->fill($translated);
+            $langModel->fill($translated);
 
-			// Save and update model timestamp
-			if ($model->exists && $model->timestamps && $langModel->getDirty()) {
-				$time = $model->freshTimestamp();
-				$model->setUpdatedAt($time);
-			}
+            // Save and update model timestamp
+            if ($model->exists && $model->timestamps && $langModel->getDirty()) {
+                $time = $model->freshTimestamp();
+                $model->setUpdatedAt($time);
+            }
 
-			if ($model->save() && $langModel->save()) {
-				return true;
-			}
-		});
-	}
+            if ($model->save() && $langModel->save()) {
+                return true;
+            }
+        });
+    }
 
-	////////////////////////////////////////////////////////////////////
-	//////////////////////////// RELATIONSHIPS /////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    //////////////////////////// RELATIONSHIPS /////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Reroutes functions to the language in use
-	 *
-	 * @param  string  $lang A language to use
-	 *
-	 * @return HasOne
-	 */
-	public function lang($lang = null)
-	{
-		if (!$lang) {
-			$lang = LangFacade::getLocale();
-		}
+    /**
+     * Reroutes functions to the language in use
+     *
+     * @param string $lang A language to use
+     *
+     * @return HasOne
+     */
+    public function lang($lang = null)
+    {
+        if (!$lang) {
+            $lang = LangFacade::getLocale();
+        }
 
-		return $this->$lang();
-	}
+        return $this->$lang();
+    }
 
-	/**
-	 * Get all translations
-	 *
-	 * @return Collection
-	 */
-	public function translations()
-	{
-		return $this->hasMany($this->getLangClass());
-	}
+    /**
+     * Get all translations
+     *
+     * @return Collection
+     */
+    public function translations()
+    {
+        return $this->hasMany($this->getLangClass());
+    }
 
-	////////////////////////////////////////////////////////////////////
-	////////////////////////////// ATTRIBUTES //////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////// ATTRIBUTES //////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Get the polyglot attributes
-	 *
-	 * @return array
-	 */
-	public function getPolyglotAttributes()
-	{
-		return array_merge($this->polyglot, array('lang'));
-	}
+    /**
+     * Get the polyglot attributes
+     *
+     * @return array
+     */
+    public function getPolyglotAttributes()
+    {
+        return array_merge($this->polyglot, array('lang'));
+    }
 
-	/**
-	 * Handle polyglot dynamic method calls for locale relations.
-	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
-	 * @return mixed
-	 */
-	public function __call($method, $parameters)
-	{
-		// If the model supports the locale, load it
-		if (in_array($method, $this->getLocales())) {
-			return $this->hasOne($this->getLangClass())->whereLang($method);
-		}
+    /**
+     * Handle polyglot dynamic method calls for locale relations.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        // If the model supports the locale, load it
+        if (in_array($method, $this->getLocales())) {
+            return $this->hasOne($this->getLangClass())->whereLang($method);
+        }
 
-		return parent::__call($method, $parameters);
-	}
+        return parent::__call($method, $parameters);
+    }
 
-	/**
-	 * Checks if a field isset while taking into account localized attributes
-	 *
-	 * @param string $key The key
-	 *
-	 * @return boolean
-	 */
-	public function __isset($key)
-	{
-		if ($this->polyglot) {
-			if (in_array($key, $this->getPolyglotAttributes())) {
-				return true;
-			}
-		}
+    /**
+     * Checks if a field isset while taking into account localized attributes
+     *
+     * @param string $key The key
+     *
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+        if ($this->polyglot) {
+            if (in_array($key, $this->getPolyglotAttributes())) {
+                return true;
+            }
+        }
 
-		return parent::__isset($key);
-	}
+        return parent::__isset($key);
+    }
 
-	/**
-	 * Get a localized attribute
-	 *
-	 * @param string $key The attribute
-	 *
-	 * @return mixed
-	 */
-	public function __get($key)
-	{
-		// If the relation has been loaded already, return it
-		if (array_key_exists($key, $this->relations)) {
-			return $this->relations[$key];
-		}
+    /**
+     * Get a localized attribute
+     *
+     * @param string $key The attribute
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        // If the relation has been loaded already, return it
+        if (array_key_exists($key, $this->relations)) {
+            return $this->relations[$key];
+        }
 
-		// If the model supports the locale, load and return it
-		if (in_array($key, $this->getLocales())) {
-			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
-			return $this->relations[$key] = $relation->getResults();
-		}
+        // If the model supports the locale, load and return it
+        if (in_array($key, $this->getLocales())) {
+            $relation = $this->hasOne($this->getLangClass())->whereLang($key);
 
-		// If the attribute is set to be automatically localized
-		if ($this->polyglot) {
-			if (in_array($key, $this->polyglot)) {
-				$lang = LangFacade::getLocale();
+            return $this->relations[$key] = $relation->getResults();
+        }
 
-				return $this->$lang ? $this->$lang->$key : null;
-			}
-		}
+        // If the attribute is set to be automatically localized
+        if ($this->polyglot) {
+            if (in_array($key, $this->polyglot)) {
+                $lang = LangFacade::getLocale();
 
-		return parent::__get($key);
-	}
+                return $this->$lang ? $this->$lang->$key : null;
+            }
+        }
 
-	////////////////////////////////////////////////////////////////////
-	/////////////////////////// PUBLIC HELPERS /////////////////////////
-	////////////////////////////////////////////////////////////////////
+        return parent::__get($key);
+    }
 
-	/**
-	 * Localize a model with an array of lang arrays
-	 *
-	 * @param  array $localization An array in the form [field][lang][value]
-	 */
-	public function localize($localization)
-	{
-		if (!$localization) {
-			return false;
-		}
+    ////////////////////////////////////////////////////////////////////
+    /////////////////////////// PUBLIC HELPERS /////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-		$langs = array_keys($localization[key($localization)]);
+    /**
+     * Localize a model with an array of lang arrays
+     *
+     * @param array $localization An array in the form [field][lang][value]
+     */
+    public function localize($localization)
+    {
+        if (!$localization) {
+            return false;
+        }
 
-		// Build lang arrays
-		foreach ($localization as $key => $value) {
-			foreach ($langs as $lang) {
-				${$lang}[$key] = array_get($value, $lang);
-				${$lang}['lang'] = $lang;
-			}
-		}
+        $langs = array_keys($localization[key($localization)]);
 
-		// Update
-		$class = $this->getLangClass();
-		foreach ($langs as $lang) {
-			if (!is_object($this->$lang)) {
-				$class = new $class($$lang);
-				$this->$lang()->save($class);
-			} else {
-				$this->$lang->fill($$lang);
-				$this->$lang->save();
-			}
-		}
-	}
+        // Build lang arrays
+        foreach ($localization as $key => $value) {
+            foreach ($langs as $lang) {
+                ${$lang}[$key] = array_get($value, $lang);
+                ${$lang}['lang'] = $lang;
+            }
+        }
 
-	/**
-	 * Localize a "with" method
-	 *
-	 * @param Query  $query
-	 * @param string $relations,...
-	 *
-	 * @return Query
-	 */
-	public function scopeWithLang()
-	{
-		$relations = func_get_args();
-		$query     = array_shift($relations);
+        // Update
+        $class = $this->getLangClass();
+        foreach ($langs as $lang) {
+            if (!is_object($this->$lang)) {
+                $class = new $class($$lang);
+                $this->$lang()->save($class);
+            } else {
+                $this->$lang->fill($$lang);
+                $this->$lang->save();
+            }
+        }
+    }
 
-		if (empty($relations)) {
-			$relations = array(LangFacade::getLocale());
-		}
+    /**
+     * Localize a "with" method
+     *
+     * @param Query  $query
+     * @param string $relations,...
+     *
+     * @return Query
+     */
+    public function scopeWithLang()
+    {
+        $relations = func_get_args();
+        $query     = array_shift($relations);
 
-		return $query->with($relations);
-	}
+        if (empty($relations)) {
+            $relations = array(LangFacade::getLocale());
+        }
 
-	////////////////////////////////////////////////////////////////////
-	//////////////////////////////// HELPERS ///////////////////////////
-	////////////////////////////////////////////////////////////////////
+        return $query->with($relations);
+    }
 
-	/**
-	 * Get the Lang class corresponding to the current model
-	 *
-	 * @return string
-	 */
-	public function getLangClass()
-	{
-		$pattern = Config::get('polyglot::model_pattern');
+    ////////////////////////////////////////////////////////////////////
+    //////////////////////////////// HELPERS ///////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-		// Get class name
-		$model = get_called_class();
-		$model = class_basename($model);
+    /**
+     * Get the Lang class corresponding to the current model
+     *
+     * @return string
+     */
+    public function getLangClass()
+    {
+        $pattern = Config::get('polyglot::model_pattern');
 
-		return str_replace('{model}', $model, $pattern);
-	}
+        // Get class name
+        $model = get_called_class();
+        $model = class_basename($model);
 
-	/**
-	 * Get an array of supported locales
-	 *
-	 * @return array
-	 */
-	protected function getLocales()
-	{
-		return Config::get('polyglot::locales');
-	}
+        return str_replace('{model}', $model, $pattern);
+    }
+
+    /**
+     * Get an array of supported locales
+     *
+     * @return array
+     */
+    protected function getLocales()
+    {
+        return Config::get('polyglot::locales');
+    }
 }
