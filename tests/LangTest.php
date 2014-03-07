@@ -64,4 +64,40 @@ class LangTest extends PolyglotTestCase
 		$this->assertTrue($language1);
 		$this->assertFalse($language2);
 	}
+
+	public function testCanGetLocale()
+	{
+		$this->translator->setLocale('en');
+
+		$localized = array("test" => true);
+
+		$this->app['translation.loader']->shouldReceive('load')->with('en', 'test', "*")->andReturn($localized);
+		$this->app['translation.loader']->shouldReceive('load')->with('fr', 'test', "*")->andReturn($localized);
+
+		$this->config = $this->mockConfig()->shouldReceive('get')->with('test')->andReturn(true)->mock();
+
+		$this->config->shouldReceive('get')->with('polyglot::fallback')->andReturn(null);
+
+		$locale = $this->translator->get('test');
+
+		$this->assertEquals($locale, $localized);
+	}
+
+	public function testMissingTranslationFallbacks()
+	{
+		$this->translator->setLocale('en');
+
+		$localized = array("test" => true);
+
+		$this->app['translation.loader']->shouldReceive('load')->with('en', 'test', '*')->andReturn(array());
+		$this->app['translation.loader']->shouldReceive('load')->with('fr', 'test', '*')->andReturn($localized);
+
+		$this->config = $this->mockConfig()->shouldReceive('get')->with('test')->andReturn(true)->mock();
+
+		$this->config->shouldReceive('get')->with('polyglot::fallback')->andReturn('fr');
+
+		$locale = $this->translator->get('test');
+
+		$this->assertEquals($locale, $localized);
+	}
 }

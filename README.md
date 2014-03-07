@@ -26,7 +26,7 @@ Setting a model as polyglot will allow you to make fields speak several language
       created_at DATETIME
       updated_at DATETIME
 
-    TABLE article_lang
+    TABLE article_langs
       id INT
       title VARCHAR
       content TEXT

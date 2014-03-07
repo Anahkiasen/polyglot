@@ -13,39 +13,33 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 
-	protected $app;
-	protected $capsule;
+	protected static $app;
+	protected static $capsule;
 
-	public function setUp()
+	public static function setUpBeforeClass()
 	{
 		date_default_timezone_set('Europe/London');
 
-		$this->app = new Container;
-		$events = new Dispatcher($this->app);
+		self::$app = new Container;
+		$events = new Dispatcher(self::$app);
 
-		$events = $this->mockEvents();
-		$this->app['config'] = $this->mockConfig();
-		$this->app['events'] = $events;
-		$this->app->instance('request', $this->mockRequest());
-		$this->app['translation.loader'] = \Mockery::mock('Illuminate\Translation\FileLoader');
+		$events = self::mockEvents();
+		self::$app['config'] = self::mockConfig();
+		self::$app['events'] = $events;
+		self::$app->instance('request', self::mockRequest());
+		self::$app['translation.loader'] = \Mockery::mock('Illuminate\Translation\FileLoader');
 
-		$this->app = PolyglotServiceProvider::make($this->app);
+		self::$app = PolyglotServiceProvider::make(self::$app);
 
 		// Configure facades
-		Config::setFacadeApplication($this->app);
-		Lang::swap($this->app['polyglot.translator']);
-
-
+		Config::setFacadeApplication(self::$app);
+		Lang::swap(self::$app['polyglot.translator']);
 
 
 		$capsule = new Capsule;
-		$capsule->addConnection(array(
-			'driver'    => 'sqlite',
-			'database'  => ':memory:',
-			'prefix'    => '',
-		));
+		$capsule->addConnection(array('driver' => 'sqlite', 'database' => ':memory:'));
 
-		$capsule->setEventDispatcher(new Dispatcher($this->app));
+		$capsule->setEventDispatcher(new Dispatcher(self::$app));
 
 		$capsule->setAsGlobal();
 
@@ -56,6 +50,16 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 		// Grab a Database Instance
 		$connection = $capsule->connection();
 
+		self::$capsule = $capsule;
+	}
+
+
+	public function setUp()
+	{
+		self::migrate();
+	}
+
+	protected static function migrate () {
 		$schema = Capsule::schema();
 		$schema->dropIfExists('articles');
 		$schema->create('articles', function ($table) {
@@ -72,7 +76,6 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 			$table->string('lang');
 		});
 
-		$this->capsule = $capsule;
 	}
 
 	/**
@@ -80,7 +83,7 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 	 *
 	 * @return Mockery
 	 */
-	protected function mockEvents()
+	protected static function mockEvents()
 	{
 		return \Mockery::mock('Illuminate\Events\Dispatcher');
 	}
@@ -90,7 +93,7 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 	 *
 	 * @return Mockery
 	 */
-	protected function mockRequest($segment = 'fr')
+	protected static function mockRequest($segment = 'fr')
 	{
 		$request = \Mockery::mock('Symfony\Component\HttpFoundation\Request');
 		$request->shouldIgnoreMissing();
@@ -106,7 +109,7 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 	 *
 	 * @return Mockery
 	 */
-	protected function mockConfig()
+	protected static function mockConfig()
 	{
 		$config = \Mockery::mock('Illuminate\Config\Repository');
 		$config->shouldReceive('get')->with('app.locale')->andReturn('fr');

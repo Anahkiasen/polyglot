@@ -14,52 +14,93 @@ class RealArticle extends Polyglot {
 
 }
 
+class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
 
-class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
-
-	public function setUp()
+	public function testUpdateTImestampsOnSave()
 	{
-		parent::setUp();
-	}
-
-	public function testHasSimpleApi() {
-		$article = new RealArticle(array(
-			"name" => "Some name",
-			"title" => "Some title",
-			"lang" => "fr"
-		));
-
-		$this->assertTrue($article->save());
-
-		$article = new RealArticle;
-		$article->fill(array(
-			"title" => "Some title",
-			"lang" => "fr"
-		));
-
-		$saved = false;
-		try {
-			$saved = $article->save();
-		} catch (\Illuminate\Database\QueryException $e) {
-
-		}
-
-		$this->assertFalse($saved);
-	}
-
-	public function testUpdateTImestampsOnSave() {
-		$article = new RealArticle();
-		$article->name = "test";
-		$article->save();
+		$a = new RealArticle();
+		$a->name = 'Start name';
+		$a->title = 'Start title';
+		$a->lang = 'fr';
+		$a->save();
 
 		$article = RealArticle::first();
 		$start = $article->updated_at;
 
 		sleep(1);
 
-		$article->name = "different";
+		$article->title = "different";
 		$article->save();
 
-		$this->assertNotEquals($start.'', $article->updated_at.'');
+		$this->assertNotEquals($start, $article->updated_at);
 	}
+
+	public function testScopeWithLang()
+	{
+		// Test scope with lang
+		$a = new RealArticle();
+		$a->name = 'Start name';
+		$a->title = 'Start title';
+		$a->lang = 'fr';
+		$a->save();
+
+		$article = RealArticle::withLang('fr')->where('id', $a->id)->first();
+		$array = $article->toArray();
+		$this->assertEquals($article->fr->title, "Start title");
+
+		// empty
+		$article = RealArticle::withLang()->where('id', $a->id)->first();
+		$array = $article->toArray();
+		$this->assertEquals($article->fr->title, "Start title");
+	}
+
+	public function testLocalizeHelper()
+	{
+		$article = new RealArticle();
+		$article->name = 'Start name';
+		$article->title = 'Start title';
+		$article->lang = 'fr';
+		$article->save();
+
+		$this->assertFalse($article->localize(array()));
+
+		$article->localize(array(
+			'title' => array(
+				'fr' => 'fr title',
+				'en' => 'en title'
+			)
+		));
+	}
+
+	public function testLangHelper()
+	{
+		$article = new RealArticle();
+		$article->name = 'Start name';
+		$article->title = 'Start title';
+		$article->lang = 'fr';
+		$article->save();
+
+		$fr = $article->lang();
+
+		$this->isInstanceOf($fr, 'Polyglot\Dummies\RealArticleLang');
+
+		$en = $article->lang('en');
+
+		$this->isInstanceOf($en, 'Polyglot\Dummies\RealArticleLang');
+	}
+
+	public function testIssetHelper()
+	{
+		$article = new RealArticle();
+		$article->name = 'name';
+		$article->title = 'title';
+		$article->lang = 'fr';
+		$article->save();
+
+		$this->assertTrue(isset($article->fr));
+		$this->assertTrue(isset($article->title));
+
+		$this->assertEquals($article->title, 'title');
+	}
+
 }
