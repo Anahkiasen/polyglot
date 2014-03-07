@@ -26,12 +26,7 @@ abstract class Polyglot extends Model
 	{
 		static::saving(function ($model) {
 
-			// Cancel if not localized
 			$polyglotAttributes = $model->getPolyglotAttributes();
-			$hasPolyglotAttributes = empty($polyglotAttributes);
-			if ($hasPolyglotAttributes) {
-				return true;
-			}
 
 			// Get the model's attributes
 			$attributes = $model->getAttributes();
@@ -71,16 +66,15 @@ abstract class Polyglot extends Model
 
 			$langModel->fill($translated);
 
-			// Save and page timestamp
+			// Save and update model timestamp
 			if ($model->exists && $model->timestamps && $langModel->getDirty()) {
 				$time = $model->freshTimestamp();
 				$model->setUpdatedAt($time);
 			}
 
-			$model->save();
-			$langModel->save();
-
-			return true;
+			if ($model->save() && $langModel->save()) {
+				return true;
+			}
 		});
 	}
 
@@ -225,7 +219,7 @@ abstract class Polyglot extends Model
 		foreach ($langs as $lang) {
 			if (!is_object($this->$lang)) {
 				$class = new $class($$lang);
-				$this->$lang()->insert($class);
+				$this->$lang()->save($class);
 			} else {
 				$this->$lang->fill($$lang);
 				$this->$lang->save();
