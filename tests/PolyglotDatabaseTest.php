@@ -30,6 +30,7 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
 		sleep(1);
 
 		$article->title = "different";
+		$article->lang = 'fr';
 		$article->save();
 
 		$this->assertNotEquals($start, $article->updated_at);
@@ -70,6 +71,8 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
 				'en' => 'en title'
 			)
 		));
+
+		$this->assertEquals($article->fr->title, 'fr title');
 	}
 
 	public function testLangHelper()
@@ -100,7 +103,7 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase {
 		$this->assertTrue(isset($article->fr));
 		$this->assertTrue(isset($article->title));
 
-		$this->assertEquals($article->title, 'title');
+		$this->assertEquals($article->fr->title, 'title');
 	}
 
 }
