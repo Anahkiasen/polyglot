@@ -49,7 +49,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	/**
 	 * Get an instance from the Container
 	 *
-	 * @param  string $key
+	 * @param string $key
 	 *
 	 * @return object
 	 */
@@ -93,7 +93,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	/**
 	 * Get a new instance of UrlGenerator with a mock Request
 	 *
-	 * @param  Request $request
+	 * @param Request $request
 	 *
 	 * @return UrlGenerator
 	 */

@@ -26,12 +26,7 @@ abstract class Polyglot extends Model
 	{
 		static::saving(function ($model) {
 
-			// Cancel if not localized
-			$hasPolyglotAttributes = $model->getPolyglotAttributes();
-			$hasPolyglotAttributes = empty($hasPolyglotAttributes);
-			if ($hasPolyglotAttributes) {
-				return true;
-			}
+			$polyglotAttributes = $model->getPolyglotAttributes();
 
 			// Get the model's attributes
 			$attributes = $model->getAttributes();
@@ -39,7 +34,7 @@ abstract class Polyglot extends Model
 
 			// Extract polyglot attributes
 			foreach ($attributes as $key => $value) {
-				if (in_array($key, $model->getPolyglotAttributes())) {
+				if (in_array($key, $polyglotAttributes)) {
 					unset($attributes[$key]);
 					unset($model[$key]);
 					$translated[$key] = $value;
@@ -57,7 +52,7 @@ abstract class Polyglot extends Model
 			$translated['lang'] = $lang;
 
 			// Save new model
-			if ( ! $model->exists) {
+			if (! $model->exists) {
 				$model->save();
 			}
 
@@ -66,20 +61,20 @@ abstract class Polyglot extends Model
 				$langModel = $model->getLangClass();
 				$langModel = new $langModel($translated);
 				$model->translations()->save($langModel);
+				$model->setRelation($lang, $langModel);
 			}
 
 			$langModel->fill($translated);
 
-			// Save and page timestamp
+			// Save and update model timestamp
 			if ($model->exists && $model->timestamps && $langModel->getDirty()) {
 				$time = $model->freshTimestamp();
 				$model->setUpdatedAt($time);
 			}
 
-			$model->save();
-			$langModel->save();
-
-			return false;
+			if ($model->save() && $langModel->save()) {
+				return true;
+			}
 		});
 	}
 
@@ -90,7 +85,7 @@ abstract class Polyglot extends Model
 	/**
 	 * Reroutes functions to the language in use
 	 *
-	 * @param  string  $lang A language to use
+	 * @param string $lang A language to use
 	 *
 	 * @return HasOne
 	 */
@@ -130,8 +125,8 @@ abstract class Polyglot extends Model
 	/**
 	 * Handle polyglot dynamic method calls for locale relations.
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  string $method
+	 * @param  array  $parameters
 	 * @return mixed
 	 */
 	public function __call($method, $parameters)
@@ -179,6 +174,7 @@ abstract class Polyglot extends Model
 		// If the model supports the locale, load and return it
 		if (in_array($key, $this->getLocales())) {
 			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
+
 			return $this->relations[$key] = $relation->getResults();
 		}
 
@@ -201,7 +197,7 @@ abstract class Polyglot extends Model
 	/**
 	 * Localize a model with an array of lang arrays
 	 *
-	 * @param  array $localization An array in the form [field][lang][value]
+	 * @param array $localization An array in the form [field][lang][value]
 	 */
 	public function localize($localization)
 	{
@@ -224,7 +220,7 @@ abstract class Polyglot extends Model
 		foreach ($langs as $lang) {
 			if (!is_object($this->$lang)) {
 				$class = new $class($$lang);
-				$this->$lang()->insert($class);
+				$this->$lang()->save($class);
 			} else {
 				$this->$lang->fill($$lang);
 				$this->$lang->save();

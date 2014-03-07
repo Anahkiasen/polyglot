@@ -21,9 +21,9 @@ class UrlGenerator extends IlluminateUrlGenerator
 	/**
 	 * Generate a absolute URL to the given language
 	 *
-	 * @param  string  $language
-	 * @param  mixed   $parameters
-	 * @param  bool    $secure
+	 * @param  string $language
+	 * @param  mixed  $parameters
+	 * @param  bool   $secure
 	 * @return string
 	 */
 	public function language($language, $parameters = array(), $secure = null)
@@ -34,9 +34,9 @@ class UrlGenerator extends IlluminateUrlGenerator
 	/**
 	 * Generate a absolute URL to the same page in another language
 	 *
-	 * @param  string  $language
-	 * @param  mixed   $parameters
-	 * @param  bool    $secure
+	 * @param  string $language
+	 * @param  mixed  $parameters
+	 * @param  bool   $secure
 	 * @return string
 	 */
 	public function switchLanguage($language, $parameters = array(), $secure = null)

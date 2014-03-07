@@ -35,9 +35,9 @@ class Lang extends Translator
 	/**
 	 * Get the translation for the given key, or fallback to fallback locale
 	 *
-	 * @param  string  $key
-	 * @param  array   $replace
-	 * @param  string  $locale
+	 * @param  string $key
+	 * @param  array  $replace
+	 * @param  string $locale
 	 * @return string
 	 */
 	public function get($key, array $replace = array(), $locale = null)
@@ -59,7 +59,7 @@ class Lang extends Translator
 	/**
 	 * Whether a given language is the current one
 	 *
-	 * @param  string $locale The language to check
+	 * @param string $locale The language to check
 	 *
 	 * @return boolean
 	 */
@@ -103,7 +103,7 @@ class Lang extends Translator
 	/**
 	 * Sets the locale according to the current language
 	 *
-	 * @param  string $locale A language string to use
+	 * @param string $locale A language string to use
 	 * @return
 	 */
 	public function setInternalLocale($locale = false)
@@ -154,7 +154,7 @@ class Lang extends Translator
 	/**
 	 * Sanitize a locale
 	 *
-	 * @param  string $locale
+	 * @param string $locale
 	 *
 	 * @return string
 	 */

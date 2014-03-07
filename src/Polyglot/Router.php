@@ -16,8 +16,8 @@ class Router extends IlluminateRouter
 	/**
 	 * Create a localized route group
 	 *
-	 * @param  array   $group
-	 * @param  Closure $callback
+	 * @param array   $group
+	 * @param Closure $callback
 	 *
 	 * @return Closure
 	 */

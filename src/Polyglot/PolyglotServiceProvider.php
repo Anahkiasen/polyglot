@@ -47,7 +47,7 @@ class PolyglotServiceProvider extends ServiceProvider
 	/**
 	 * Create a Polyglot container
 	 *
-	 * @param  Container $app
+	 * @param Container $app
 	 *
 	 * @return Container
 	 */
@@ -67,7 +67,7 @@ class PolyglotServiceProvider extends ServiceProvider
 	/**
 	 * Bind the Polyglot classes to a Container
 	 *
-	 * @param  Container $app
+	 * @param Container $app
 	 *
 	 * @return Container
 	 */

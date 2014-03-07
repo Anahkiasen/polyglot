@@ -1,6 +1,7 @@
 <?php
 namespace Polyglot\TestCases;
 
+use Mockery;
 use Polyglot\Polyglot;
 use PHPUnit_Framework_TestCase;
 use Illuminate\Events\Dispatcher;
@@ -10,13 +11,16 @@ use Polyglot\PolyglotServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-
-class DatabaseTestCase extends PHPUnit_Framework_TestCase {
+class DatabaseTestCase extends PHPUnit_Framework_TestCase
+{
 
 	protected $app;
+	protected $capsule;
 
-	public function setUp()
+	public function __construct()
 	{
+		parent::__construct();
+
 		date_default_timezone_set('Europe/London');
 
 		$this->app = new Container;
@@ -34,15 +38,8 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 		Config::setFacadeApplication($this->app);
 		Lang::swap($this->app['polyglot.translator']);
 
-
-
-
 		$capsule = new Capsule;
-		$capsule->addConnection(array(
-			'driver'    => 'sqlite',
-			'database'  => ':memory:',
-			'prefix'    => '',
-		));
+		$capsule->addConnection(array('driver' => 'sqlite', 'database' => ':memory:'));
 
 		$capsule->setEventDispatcher(new Dispatcher($this->app));
 
@@ -51,10 +48,10 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 		// Prepare Eloquent ORM for use
 		$capsule->bootEloquent();
 
-
 		// Grab a Database Instance
 		$connection = $capsule->connection();
 
+		$this->capsule = $capsule;
 		$schema = Capsule::schema();
 		$schema->dropIfExists('articles');
 		$schema->create('articles', function ($table) {
@@ -62,6 +59,26 @@ class DatabaseTestCase extends PHPUnit_Framework_TestCase {
 			$table->string('name');
 			$table->timestamps();
 		});
+
+		$schema->dropIfExists('article_langs');
+		$schema->create('article_langs', function ($table) {
+			$table->increments('id');
+			$table->string('title');
+			$table->integer('real_article_id');
+			$table->string('lang');
+		});
+	}
+
+	/**
+	 * Clean up mocked instances
+	 *
+	 * @return void
+	 */
+	public function tearDown()
+	{
+		Capsule::table('articles')->truncate();
+		Capsule::table('article_langs')->truncate();
+		Mockery::close();
 	}
 
 	/**
