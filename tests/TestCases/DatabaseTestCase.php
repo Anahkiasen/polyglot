@@ -11,118 +11,116 @@ use Polyglot\PolyglotServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+class DatabaseTestCase extends PHPUnit_Framework_TestCase
+{
 
-class DatabaseTestCase extends PHPUnit_Framework_TestCase {
+    protected $app;
+    protected $capsule;
 
-	protected $app;
-	protected $capsule;
+    public function __construct()
+    {
+        parent::__construct();
 
+        date_default_timezone_set('Europe/London');
 
-	function __construct() {
-		parent::__construct();
+        $this->app = new Container;
+        $events = new Dispatcher($this->app);
 
-		date_default_timezone_set('Europe/London');
+        $events = $this->mockEvents();
+        $this->app['config'] = $this->mockConfig();
+        $this->app['events'] = $events;
+        $this->app->instance('request', $this->mockRequest());
+        $this->app['translation.loader'] = \Mockery::mock('Illuminate\Translation\FileLoader');
 
-		$this->app = new Container;
-		$events = new Dispatcher($this->app);
+        $this->app = PolyglotServiceProvider::make($this->app);
 
-		$events = $this->mockEvents();
-		$this->app['config'] = $this->mockConfig();
-		$this->app['events'] = $events;
-		$this->app->instance('request', $this->mockRequest());
-		$this->app['translation.loader'] = \Mockery::mock('Illuminate\Translation\FileLoader');
+        // Configure facades
+        Config::setFacadeApplication($this->app);
+        Lang::swap($this->app['polyglot.translator']);
 
-		$this->app = PolyglotServiceProvider::make($this->app);
+        $capsule = new Capsule;
+        $capsule->addConnection(array('driver' => 'sqlite', 'database' => ':memory:'));
 
-		// Configure facades
-		Config::setFacadeApplication($this->app);
-		Lang::swap($this->app['polyglot.translator']);
+        $capsule->setEventDispatcher(new Dispatcher($this->app));
 
+        $capsule->setAsGlobal();
 
-		$capsule = new Capsule;
-		$capsule->addConnection(array('driver' => 'sqlite', 'database' => ':memory:'));
+        // Prepare Eloquent ORM for use
+        $capsule->bootEloquent();
 
-		$capsule->setEventDispatcher(new Dispatcher($this->app));
+        // Grab a Database Instance
+        $connection = $capsule->connection();
 
-		$capsule->setAsGlobal();
+        $this->capsule = $capsule;
+        $schema = Capsule::schema();
+        $schema->dropIfExists('articles');
+        $schema->create('articles', function ($table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
+        });
 
-		// Prepare Eloquent ORM for use
-		$capsule->bootEloquent();
+        $schema->dropIfExists('article_langs');
+        $schema->create('article_langs', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->integer('real_article_id');
+            $table->string('lang');
+        });
+    }
 
-		// Grab a Database Instance
-		$connection = $capsule->connection();
+    /**
+     * Clean up mocked instances
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        Capsule::table('articles')->truncate();
+        Capsule::table('article_langs')->truncate();
+        Mockery::close();
+    }
 
-		$this->capsule = $capsule;
-		$schema = Capsule::schema();
-		$schema->dropIfExists('articles');
-		$schema->create('articles', function ($table) {
-			$table->increments('id');
-			$table->string('name');
-			$table->timestamps();
-		});
+    /**
+     * Mock the events dispatcher
+     *
+     * @return Mockery
+     */
+    protected function mockEvents()
+    {
+        return \Mockery::mock('Illuminate\Events\Dispatcher');
+    }
 
+    /**
+     * Mock Request
+     *
+     * @return Mockery
+     */
+    protected function mockRequest($segment = 'fr')
+    {
+        $request = \Mockery::mock('Symfony\Component\HttpFoundation\Request');
+        $request->shouldIgnoreMissing();
+        $request->server = \Mockery::mock('server')->shouldIgnoreMissing();
+        $request->shouldReceive('getBaseUrl')->andReturn($segment.'/foobar');
+        $request->shouldReceive('segment')->andReturn($segment);
 
-		$schema->dropIfExists('article_langs');
-		$schema->create('article_langs', function ($table) {
-			$table->increments('id');
-			$table->string('title');
-			$table->integer('real_article_id');
-			$table->string('lang');
-		});
-	}
+        return $request;
+    }
 
-	/**
-	 * Clean up mocked instances
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		Capsule::table('articles')->truncate();
-		Capsule::table('article_langs')->truncate();
-		Mockery::close();
-	}
+    /**
+     * Mock Config
+     *
+     * @return Mockery
+     */
+    protected function mockConfig()
+    {
+        $config = \Mockery::mock('Illuminate\Config\Repository');
+        $config->shouldReceive('get')->with('app.locale')->andReturn('fr');
+        $config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
+        $config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
+        $config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('Polyglot\Dummies\{model}Lang');
+        $config->shouldReceive('package');
 
-	/**
-	 * Mock the events dispatcher
-	 *
-	 * @return Mockery
-	 */
-	protected function mockEvents()
-	{
-		return \Mockery::mock('Illuminate\Events\Dispatcher');
-	}
-
-	/**
-	 * Mock Request
-	 *
-	 * @return Mockery
-	 */
-	protected function mockRequest($segment = 'fr')
-	{
-		$request = \Mockery::mock('Symfony\Component\HttpFoundation\Request');
-		$request->shouldIgnoreMissing();
-		$request->server = \Mockery::mock('server')->shouldIgnoreMissing();
-		$request->shouldReceive('getBaseUrl')->andReturn($segment.'/foobar');
-		$request->shouldReceive('segment')->andReturn($segment);
-
-		return $request;
-	}
-
-	/**
-	 * Mock Config
-	 *
-	 * @return Mockery
-	 */
-	protected function mockConfig()
-	{
-		$config = \Mockery::mock('Illuminate\Config\Repository');
-		$config->shouldReceive('get')->with('app.locale')->andReturn('fr');
-		$config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
-		$config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
-		$config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('Polyglot\Dummies\{model}Lang');
-		$config->shouldReceive('package');
-
-		return $config;
-	}
+        return $config;
+    }
 }
