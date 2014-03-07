@@ -10,87 +10,87 @@ use Illuminate\Support\ServiceProvider;
  */
 class PolyglotServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app = $this->bindClasses($this->app);
-    }
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->app = $this->bindClasses($this->app);
+	}
 
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Facades\Lang::swap($this->app['polyglot.translator']);
-    }
+	/**
+	 * Bootstrap the application events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		Facades\Lang::swap($this->app['polyglot.translator']);
+	}
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array('polyglot.translator', 'router', 'url');
-    }
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array('polyglot.translator', 'router', 'url');
+	}
 
-    ////////////////////////////////////////////////////////////////////
-    /////////////////////////////// BINDINGS ///////////////////////////
-    ////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	/////////////////////////////// BINDINGS ///////////////////////////
+	////////////////////////////////////////////////////////////////////
 
-    /**
-     * Create a Polyglot container
-     *
-     * @param Container $app
-     *
-     * @return Container
-     */
-    public static function make($app = null)
-    {
-        if (!$app) {
-            $app = new Container;
-        }
+	/**
+	 * Create a Polyglot container
+	 *
+	 * @param Container $app
+	 *
+	 * @return Container
+	 */
+	public static function make($app = null)
+	{
+		if (!$app) {
+			$app = new Container;
+		}
 
-        // Bind classes
-        $provider = new static($app);
-        $app = $provider->bindClasses($app);
+		// Bind classes
+		$provider = new static($app);
+		$app = $provider->bindClasses($app);
 
-        return $app;
-    }
+		return $app;
+	}
 
-    /**
-     * Bind the Polyglot classes to a Container
-     *
-     * @param Container $app
-     *
-     * @return Container
-     */
-    public function bindClasses(Container $app)
-    {
-        $app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
+	/**
+	 * Bind the Polyglot classes to a Container
+	 *
+	 * @param Container $app
+	 *
+	 * @return Container
+	 */
+	public function bindClasses(Container $app)
+	{
+		$app['config']->package('anahkiasen/polyglot', __DIR__.'/../config');
 
-        $app->singleton('polyglot.translator', function ($app) {
-            return new Lang($app);
-        });
+		$app->singleton('polyglot.translator', function ($app) {
+			return new Lang($app);
+		});
 
-        $app->singleton('router', function ($app) {
-            return new Router($app['events'], $app);
-        });
+		$app->singleton('router', function ($app) {
+			return new Router($app['events'], $app);
+		});
 
-        $app->singleton('url', function ($app) {
-            $routes = $app['router']->getRoutes();
+		$app->singleton('url', function ($app) {
+			$routes = $app['router']->getRoutes();
 
-            return new UrlGenerator($routes, $app->rebinding('request', function ($app, $request) {
-                $app['url']->setRequest($request);
-            }));
-        });
+			return new UrlGenerator($routes, $app->rebinding('request', function ($app, $request) {
+				$app['url']->setRequest($request);
+			}));
+		});
 
-        return $app;
-    }
+		return $app;
+	}
 }

@@ -5,10 +5,10 @@ use Polyglot\Polyglot;
 
 class RealArticle extends Polyglot
 {
-    protected $guarded = array('created_at', 'updated_at');
+	protected $guarded = array('created_at', 'updated_at');
 
-    protected $table = 'articles';
+	protected $table = 'articles';
 
-    protected $polyglot = array('title', 'body');
+	protected $polyglot = array('title', 'body');
 
 }
