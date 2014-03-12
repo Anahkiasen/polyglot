@@ -175,6 +175,10 @@ abstract class Polyglot extends Model
 		if (in_array($key, $this->getLocales())) {
 			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
 
+			if ($relation->getResults() === null) {
+				$relation = $this->hasOne($this->getLangClass())->whereLang(Config::get('polyglot::fallback'));
+			}
+
 			return $this->relations[$key] = $relation->getResults();
 		}
 
