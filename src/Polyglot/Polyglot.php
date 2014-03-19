@@ -175,8 +175,9 @@ abstract class Polyglot extends Model
 		if ($this->polyglot) {
 			if (in_array($key, $this->polyglot)) {
 				$lang = LangFacade::getLocale();
+				$fall = LangFacade::fallbackLocale();
 
-				return $this->$lang ? $this->$lang->$key : null;
+				return $this->$lang ? $this->$lang->$key : $this->$fall->$key;
 			}
 		}
 
