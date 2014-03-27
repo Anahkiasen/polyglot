@@ -266,10 +266,13 @@ abstract class Polyglot extends Model
 		$pattern = Config::get('polyglot::model_pattern');
 
 		// Get class name
-		$model = get_called_class();
-		$model = class_basename($model);
+		$class = get_called_class();
+		$pos = strrpos($class, '\\');
+		$namespace = $pos ? substr($class, 0, $pos + 1) : '';
+		$model = $pos ? substr($class, $pos + 1) : $class;
+		$model = str_replace('{model}', $model, $pattern);
 
-		return str_replace('{model}', $model, $pattern);
+		return $namespace.$model;
 	}
 
 	/**
