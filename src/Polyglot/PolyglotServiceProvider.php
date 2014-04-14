@@ -79,12 +79,6 @@ class PolyglotServiceProvider extends ServiceProvider
 			return new Lang($app);
 		});
 
-		$app->singleton('url', function ($app) {
-			$routes = $app['router']->getRoutes();
-
-			return new UrlGenerator($routes, $app['request']);
-		});
-
 		return $app;
 	}
 }
