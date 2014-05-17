@@ -185,8 +185,15 @@ abstract class Polyglot extends Model
 		// If the attribute is set to be automatically localized
 		if ($this->polyglot) {
 			if (in_array($key, $this->polyglot)) {
-				$lang = LangFacade::getLocale();
 
+				/**
+				 * If query executed with join and a property is already there
+				 */
+				if (isset($this->attributes[$key])) {
+					return $this->attributes[$key];
+				}
+
+				$lang = LangFacade::getLocale();
 				return $this->$lang ? $this->$lang->$key : null;
 			}
 		}
