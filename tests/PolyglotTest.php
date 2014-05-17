@@ -12,6 +12,7 @@ class PolyglotTest extends PolyglotTestCase
 
 		$this->assertEquals('Name', $article->en->name);
 		$this->assertEquals('Nom', $article->fr->name);
+		$this->assertEquals('Nom', $article->de->name);
 		$this->assertEquals('Nom', $article->name);
 	}
 

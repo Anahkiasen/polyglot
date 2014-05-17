@@ -132,7 +132,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 		$config = Mockery::mock('Illuminate\Config\Repository');
 		$config->shouldReceive('get')->with('app.locale')->andReturn('fr');
 		$config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
-		$config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en'));
+		$config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en', 'de'));
 		$config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('Polyglot\Dummies\{model}Lang');
 		$config->shouldReceive('package');
 

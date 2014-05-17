@@ -13,7 +13,7 @@ class ArticleLang extends Model
 			return $relation;
 		});
 
-		$relation->name = $lang == 'fr' ? 'Nom' : 'Name';
+		$relation->name = $lang == 'en' ? 'Name' : 'Nom';
 
 		return $relation;
 	}

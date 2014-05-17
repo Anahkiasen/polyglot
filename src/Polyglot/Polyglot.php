@@ -56,8 +56,8 @@ abstract class Polyglot extends Model
 				$model->save();
 			}
 
-			// If no Lang model, create one
-			if (!$langModel) {
+			// If no Lang model or the fallback was returned, create a new one
+			if (!$langModel || ($langModel->lang !== $lang)) {
 				$langModel = $model->getLangClass();
 				$langModel = new $langModel($translated);
 				$model->translations()->save($langModel);
@@ -174,6 +174,10 @@ abstract class Polyglot extends Model
 		// If the model supports the locale, load and return it
 		if (in_array($key, $this->getLocales())) {
 			$relation = $this->hasOne($this->getLangClass())->whereLang($key);
+
+			if ($relation->getResults() === null) {
+				$relation = $this->hasOne($this->getLangClass())->whereLang(Config::get('polyglot::fallback'));
+			}
 
 			return $this->relations[$key] = $relation->getResults();
 		}
