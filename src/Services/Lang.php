@@ -198,7 +198,7 @@ class Lang extends Translator
 		$this->locale = $locale;
 		$this->app->setLocale($locale);
 
-		$locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);;
+		$locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);
 
 		// Set locale
 		putenv('LC_ALL='.$locale);

@@ -34,12 +34,12 @@ class PolyglotServiceProvider extends ServiceProvider
 		Facades\Lang::swap($this->app['polyglot.translator']);
 
 		// Configure gettext
-		$locale = $this->app['polyglot.translator']->sanitize();
+		$locale = $this->app['url']->locale();
 		$this->app['polyglot.translator']->setInternalLocale($locale);
 
 		// Add i18n Twig extension
 		if ($this->app->bound('twig')) {
-			//$this->app['twig']->addExtension(new Twig_Extensions_Extension_I18n);
+			$this->app['twig']->addExtension(new Twig_Extensions_Extension_I18n);
 		}
 	}
 
