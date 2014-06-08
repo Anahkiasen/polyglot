@@ -1,5 +1,5 @@
 <?php
-namespace Polyglot;
+namespace Polyglot\Services;
 
 use Illuminate\Routing\UrlGenerator as IlluminateUrlGenerator;
 

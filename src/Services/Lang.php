@@ -1,8 +1,9 @@
 <?php
-namespace Polyglot;
+namespace Polyglot\Services;
 
 use Illuminate\Container\Container;
 use Illuminate\Translation\Translator;
+use Illuminate\Support\Str;
 
 /**
  * General localization helpers
@@ -17,6 +18,20 @@ class Lang extends Translator
 	protected $app;
 
 	/**
+	 * The translation domain
+	 *
+	 * @var string
+	 */
+	protected $domain;
+
+	/**
+	 * The localization encoding
+	 *
+	 * @var string
+	 */
+	protected $encoding = 'UTF-8';
+
+	/**
 	 * Build the language class
 	 *
 	 * @param Container $app
@@ -26,6 +41,62 @@ class Lang extends Translator
 		$this->app    = $app;
 		$this->loader = $app['translation.loader'];
 		$this->locale = $app['config']->get('app.locale');
+
+		$this->domain = $app['config']->get('polyglot::domain');
+	}
+
+	////////////////////////////////////////////////////////////////////
+	//////////////////////////////// DOMAIN ////////////////////////////
+	////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Get the translation domain
+	 *
+	 * @return string
+	 */
+	public function getDomain()
+	{
+		return $this->domain;
+	}
+
+	/**
+	 * Get the folder where the translations reside
+	 *
+	 * @param string $subfolder
+	 *
+	 * @return string
+	 */
+	public function getTranslationsFolder($subfolder = null)
+	{
+		$subfolder = $subfolder ? '/'.$subfolder : $subfolder;
+
+		return $this->app['config']->get('polyglot::folder').$subfolder;
+	}
+
+	/**
+	 * Get the folder where a locale's translations reside
+	 *
+	 * @param string $locale
+	 *
+	 * @return string
+	 */
+	public function getLocaleFolder($locale)
+	{
+		$folder = sprintf('%s.%s/LC_MESSAGES', $locale, $this->getEncoding(true));
+
+		return $this->getTranslationsFolder($folder);
+	}
+
+	/**
+	 * Get the encoding
+	 *
+	 * @param boolean $slug
+	 *
+	 * @return string
+	 */
+	public function getEncoding($slug = false)
+	{
+		return $slug ? Str::slug($this->encoding, '') : $this->encoding;
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -101,6 +172,16 @@ class Lang extends Translator
 	}
 
 	/**
+	 * Get the internal locale
+	 *
+	 * @return string
+	 */
+	public function getInternalLocale()
+	{
+		return setlocale(LC_ALL, 0);
+	}
+
+	/**
 	 * Sets the locale according to the current language
 	 *
 	 * @param string $locale A language string to use
@@ -115,18 +196,19 @@ class Lang extends Translator
 
 		// Base table of locales
 		$this->locale = $locale;
-		$locales = array(
-			'en' => 'en_US',
-			'zh' => 'zh_CN',
-		);
+		$this->app->setLocale($locale);
 
-		// Get correct locale
-		$fallback = $locale.'_'.strtoupper($locale);
-		$locale   = array_get($locales, $locale, $fallback);
+		$locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);;
 
+		// Set locale
+		putenv('LC_ALL='.$locale);
 		setlocale(LC_ALL, $locale);
 
-		return setlocale(LC_ALL, 0);
+		// Specify the location of the translation tables
+		bindtextdomain($this->domain, $this->getTranslationsFolder());
+		textdomain($this->domain);
+
+		return $this->getInternalLocale();
 	}
 
 	/**
@@ -158,10 +240,35 @@ class Lang extends Translator
 	 *
 	 * @return string
 	 */
-	public function sanitize($locale)
+	public function sanitize($locale = null)
 	{
 		$fallback = $this->defaultLocale();
 
 		return $this->valid($locale) ? $locale : $fallback;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	/////////////////////////////// HELPERS ////////////////////////////
+	////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Translate a short locale to long (en => en_US)
+	 *
+	 * @param string $locale
+	 *
+	 * @return string
+	 */
+	protected function shortToLongLocale($locale)
+	{
+		$locales = array(
+			'en' => 'en_US',
+			'zh' => 'zh_CN',
+		);
+
+		// Get correct locale
+		$fallback = $locale.'_'.strtoupper($locale);
+		$locale   = array_get($locales, $locale, $fallback);
+
+		return $locale;
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Polyglot;
+namespace Polyglot\Services;
 
 use Closure;
 use Illuminate\Routing\Router as IlluminateRouter;
