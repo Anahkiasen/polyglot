@@ -1,5 +1,5 @@
 <?php
-namespace Polyglot\Services;
+namespace Polyglot\Localization\Services;
 
 /**
  * Compiles existing PO files to MO

@@ -1,5 +1,5 @@
 <?php
-namespace Polyglot\Services;
+namespace Polyglot\Localization\Services;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
