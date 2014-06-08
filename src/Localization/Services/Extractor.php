@@ -79,7 +79,7 @@ class Extractor extends AbstractService
 		$contents = $this->app['files']->get($file);
 		$contents = strtr($contents, array(
 			'charset=CHARSET'                     => 'charset='.$this->app['polyglot.translator']->getEncoding(),
-			'Language: '                          => 'Language: ' .$locale,
+			'Language: '                          => 'Language: ' .$this->app['polyglot.translator']->shortToLongLocale($locale),
 			'Language-Team: LANGUAGE <LL@li.org>' => 'Language-Team: Madewithlove <maxime@madewithlove.be>',
 		));
 
