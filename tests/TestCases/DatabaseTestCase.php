@@ -14,13 +14,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class DatabaseTestCase extends PolyglotTestCase
 {
 	/**
-	 * The Database Capsule
-	 *
-	 * @var Capsule
-	 */
-	protected $capsule;
-
-	/**
 	 * Set up the tests
 	 */
 	public function setUp()
@@ -49,12 +42,7 @@ class DatabaseTestCase extends PolyglotTestCase
 		// Prepare Eloquent ORM for use
 		$capsule->bootEloquent();
 
-		// Grab a Database Instance
-		$connection = $capsule->connection();
-
-		$this->capsule = $capsule;
-
-		$schema = Capsule::schema();
+		$schema = $capsule->schema();
 		$schema->dropIfExists('articles');
 		$schema->create('articles', function ($table) {
 			$table->increments('id');
