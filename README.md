@@ -8,7 +8,7 @@
 
 ## Introduction
 
-Polyglot is a localization helper for the Laravel framework, it's an helper class to localize both your routes and your models.
+Polyglot is a localization helper for the Laravel framework, it's an helper class to localize your routes, models and views.
 
 To install it, do `composer require anahkiasen/polyglot:dev-master`, then add `Polyglot\PolyglotServiceProvider` to the `providers` array in `app/config/app.php`.
 
@@ -86,6 +86,14 @@ Route::groupLocale(['before' => 'auth'], function() {
 
 Now you can access `/fr` and `/fr/articles`, or `/en` and `/en/articles` – Polyglot will recognize the locale in the URL and automatically set your app in that language.
 There is also a `default` option in the config file, setting that option to a locale like `'default' => 'fr'` will make the root URLs point to that locale. So accessing `/articles` without prefixing it with a locale would render the page in french.
+
+## Views localization
+
+Views localization work by setting up gettext for you and providing two commands to extract translations from your views to PO files and compile those to MO files.
+
+This is currently only possible for Twig but will soon for Blade and classic PHP files, and will require the `twig/extensions` package which adds gettext support for Twig.
+
+To use simply configure your domain in the configuration, then run `php artisan lang:extract`.
 
 ## Locales helpers
 
