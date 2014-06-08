@@ -56,6 +56,7 @@ class Router extends IlluminateRouter
 		// Merge prefixes if necessary
 		if (isset($group['prefix'])) {
 			$locale = array($locale, $group['prefix']);
+			$locale = implode($locale, '/');
 		}
 
 		return array_merge($group, array('prefix' => $locale));
