@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1
+
+- Touch the parent of a lang entity when the latter is changed
+- Prevent refetching of attributes during joins
+- Fix a bug where the fallback locale wasn't properly used
+
 ## 1.2.0
 
 - Added a `fallback` language option
