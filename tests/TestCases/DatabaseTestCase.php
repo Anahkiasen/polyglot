@@ -43,7 +43,7 @@ class DatabaseTestCase extends PolyglotTestCase
 			'database' => ':memory:'
 		));
 
-		$capsule->setEventDispatcher(new Dispatcher($this->app));
+		$capsule->setEventDispatcher($this->app['events']);
 		$capsule->setAsGlobal();
 
 		// Prepare Eloquent ORM for use
@@ -62,7 +62,7 @@ class DatabaseTestCase extends PolyglotTestCase
 			$table->timestamps();
 		});
 
-		$schema->dropIfExists('article_langs');
+		$schema->dropIfExists('article_lang');
 		$schema->create('article_lang', function ($table) {
 			$table->increments('id');
 			$table->string('title');

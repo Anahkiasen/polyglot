@@ -2,9 +2,9 @@
 namespace Polyglot\TestCases;
 
 use Illuminate\Container\Container;
+use Illuminate\Events\EventServiceProvider;
 use Illuminate\Support\Str;
 use Mockery;
-use Illuminate\Events\EventServiceProvider;
 use PHPUnit_Framework_TestCase;
 use Polyglot\Services\UrlGenerator;
 
@@ -86,19 +86,6 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Mock the events dispatcher
-	 *
-	 * @return Mockery
-	 */
-	protected function mockEvents()
-	{
-		$events = Mockery::mock('Illuminate\Events\Dispatcher');
-		$events->shouldReceive('listen');
-
-		return $events;
-	}
-
-	/**
 	 * Get a new instance of UrlGenerator with a mock Request
 	 *
 	 * @param Request $request
@@ -107,12 +94,10 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function mockUrl($request)
 	{
-		$routes = $this->router->getRoutes();
-
 		$this->app['request'] = $request;
-		$this->app['url']     = new UrlGenerator($routes, $request);
+		$this->app['polyglot.url']->setRequest($request);
 
-		return $this->app['url'];
+		return $this->app['polyglot.url'];
 	}
 
 	/**
@@ -127,6 +112,10 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 		$request->server = Mockery::mock('server')->shouldIgnoreMissing();
 		$request->shouldReceive('getBaseUrl')->andReturn($segment.'/foobar');
 		$request->shouldReceive('segment')->andReturn($segment);
+
+		if ($this->app->bound('polyglot.url')) {
+			$this->app['polyglot.url']->setRequest($request);
+		}
 
 		return $request;
 	}
