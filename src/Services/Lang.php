@@ -82,7 +82,7 @@ class Lang extends Translator
 	 */
 	public function getLocaleFolder($locale)
 	{
-		$folder = sprintf('%s.%s/LC_MESSAGES', $locale, $this->getEncoding(true));
+		$folder = sprintf('%s.%s/LC_MESSAGES', $this->shortToLongLocale($locale), $this->getEncoding(true));
 
 		return $this->getTranslationsFolder($folder);
 	}
