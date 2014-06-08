@@ -258,7 +258,7 @@ class Lang extends Translator
 	 *
 	 * @return string
 	 */
-	protected function shortToLongLocale($locale)
+	public function shortToLongLocale($locale)
 	{
 		$locales = array(
 			'en' => 'en_US',
