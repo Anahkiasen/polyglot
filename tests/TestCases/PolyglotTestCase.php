@@ -2,7 +2,6 @@
 namespace Polyglot\TestCases;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use Polyglot\PolyglotServiceProvider;
 
 abstract class PolyglotTestCase extends ContainerTestCase

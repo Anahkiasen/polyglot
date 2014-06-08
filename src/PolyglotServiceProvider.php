@@ -1,10 +1,8 @@
 <?php
 namespace Polyglot;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
-use Polyglot\Localization\Localizer;
 use Polyglot\Services\Router;
 use Polyglot\Services\UrlGenerator;
 use Twig_Extensions_Extension_I18n;

@@ -1,14 +1,8 @@
 <?php
 namespace Polyglot\TestCases;
 
-use Mockery;
 use Polyglot\Polyglot;
-use PHPUnit_Framework_TestCase;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Lang;
-use Polyglot\PolyglotServiceProvider;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DatabaseTestCase extends PolyglotTestCase
