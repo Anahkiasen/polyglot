@@ -1,11 +1,12 @@
 <?php
 namespace Polyglot\TestCases;
 
-use Mockery;
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
+use Mockery;
+use Illuminate\Events\EventServiceProvider;
 use PHPUnit_Framework_TestCase;
-use Polyglot\UrlGenerator;
+use Polyglot\Services\UrlGenerator;
 
 /**
  * Base Container-mocking class
@@ -29,11 +30,15 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 		// Create container
 		$this->app = new Container;
 
+		$provider = new EventServiceProvider($this->app);
+		$provider->register();
+
 		// Bind mocked instances into it
 		$this->app['config'] = $this->mockConfig();
-		$this->app['events'] = $this->mockEvents();
 		$this->app->instance('request', $this->mockRequest());
 		$this->app['translation.loader'] = Mockery::mock('Illuminate\Translation\FileLoader');
+
+		$this->app->instance('Illuminate\Container\Container', $this->app);
 	}
 
 	/**
@@ -55,9 +60,9 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function __get($key)
 	{
-		if ($key == 'translator') {
-			return $this->app['polyglot.translator'];
-		}
+		if (in_array($key, ['translator', 'url', 'router'])) {
+			$key = 'polyglot.'.$key;
+			}
 
 		$key = Str::snake($key);
 		$key = str_replace('_', '.', $key);
@@ -87,7 +92,10 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function mockEvents()
 	{
-		return Mockery::mock('Illuminate\Events\Dispatcher');
+		$events = Mockery::mock('Illuminate\Events\Dispatcher');
+		$events->shouldReceive('listen');
+
+		return $events;
 	}
 
 	/**
@@ -99,7 +107,8 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function mockUrl($request)
 	{
-		$routes = $this->app['router']->getRoutes();
+		$routes = $this->router->getRoutes();
+
 		$this->app['request'] = $request;
 		$this->app['url']     = new UrlGenerator($routes, $request);
 
@@ -113,7 +122,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function mockRequest($segment = 'fr')
 	{
-		$request = Mockery::mock('Symfony\Component\HttpFoundation\Request');
+		$request = Mockery::mock('Illuminate\Http\Request');
 		$request->shouldIgnoreMissing();
 		$request->server = Mockery::mock('server')->shouldIgnoreMissing();
 		$request->shouldReceive('getBaseUrl')->andReturn($segment.'/foobar');
@@ -127,14 +136,24 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	 *
 	 * @return Mockery
 	 */
-	protected function mockConfig()
+	protected function mockConfig($options = array())
 	{
+		$options = array_merge(array(
+			'app.locale'              => 'fr',
+			'polyglot::folder'        => __DIR__.'/../_locales',
+			'polyglot::domain'        => 'test',
+			'polyglot::facades'       => false,
+			'polyglot::default'       => 'fr',
+			'polyglot::locales'       => array('fr', 'en', 'de'),
+			'polyglot::model_pattern' => 'Polyglot\Dummies\{model}Lang',
+		), $options);
+
 		$config = Mockery::mock('Illuminate\Config\Repository');
-		$config->shouldReceive('get')->with('app.locale')->andReturn('fr');
-		$config->shouldReceive('get')->with('polyglot::default')->andReturn('fr');
-		$config->shouldReceive('get')->with('polyglot::locales')->andReturn(array('fr', 'en', 'de'));
-		$config->shouldReceive('get')->with('polyglot::model_pattern')->andReturn('Polyglot\Dummies\{model}Lang');
 		$config->shouldReceive('package');
+
+		foreach ($options as $key => $value) {
+			$config->shouldReceive('get')->with($key)->andReturn($value);
+		}
 
 		return $config;
 	}

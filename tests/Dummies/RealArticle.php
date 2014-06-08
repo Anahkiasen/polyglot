@@ -10,5 +10,4 @@ class RealArticle extends Polyglot
 	protected $table = 'articles';
 
 	protected $polyglot = array('title', 'body');
-
 }

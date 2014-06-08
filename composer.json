@@ -23,7 +23,8 @@
 		"mockery/mockery": "dev-master",
 		"illuminate/routing": "~4",
 		"illuminate/database": "~4",
-		"illuminate/translation": "~4"
+		"illuminate/translation": "~4",
+		"patchwork/utf8": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {

@@ -25,7 +25,6 @@ abstract class Polyglot extends Model
 	protected static function boot()
 	{
 		static::saving(function ($model) {
-
 			$polyglotAttributes = $model->getPolyglotAttributes();
 
 			// Get the model's attributes
@@ -52,7 +51,7 @@ abstract class Polyglot extends Model
 			$translated['lang'] = $lang;
 
 			// Save new model
-			if (! $model->exists) {
+			if (!$model->exists) {
 				$model->save();
 			}
 

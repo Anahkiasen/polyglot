@@ -2,25 +2,27 @@
 namespace Polyglot;
 
 use Polyglot\Dummies\RealArticle;
+use Polyglot\TestCases\DatabaseTestCase;
 
-class PolyglotDatabaseTest extends TestCases\DatabaseTestCase
+class PolyglotDatabaseTest extends DatabaseTestCase
 {
-
-	public function testUpdateTImestampsOnSave()
+	public function setUp()
 	{
-		$a = new RealArticle();
-		$a->name = 'Start name';
-		$a->title = 'Start title';
-		$a->lang = 'fr';
-		$a->save();
+		parent::setUp();
+		$this->app['config'] = $this->mockConfig(['polyglot::fallback' => null]);
+	}
+
+	public function testUpdateTimestampsOnSave()
+	{
+		$article = $this->createArticle();
 
 		$article = RealArticle::first();
 		$start = $article->updated_at;
 
 		sleep(1);
 
-		$article->title = "different";
-		$article->lang = 'fr';
+		$article->title = 'different';
+		$article->lang  = 'fr';
 		$article->save();
 
 		$this->assertNotEquals($start, $article->updated_at);
@@ -29,29 +31,21 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase
 	public function testScopeWithLang()
 	{
 		// Test scope with lang
-		$a = new RealArticle();
-		$a->name = 'Start name';
-		$a->title = 'Start title';
-		$a->lang = 'fr';
-		$a->save();
+		$article = $this->createArticle();
 
-		$article = RealArticle::withLang('fr')->where('id', $a->id)->first();
+		$article = RealArticle::withLang('fr')->where('id', $article->id)->first();
 		$array = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 
 		// empty
-		$article = RealArticle::withLang()->where('id', $a->id)->first();
+		$article = RealArticle::withLang()->where('id', $article->id)->first();
 		$array = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 	}
 
 	public function testLocalizeHelper()
 	{
-		$article = new RealArticle();
-		$article->name = 'Start name';
-		$article->title = 'Start title';
-		$article->lang = 'fr';
-		$article->save();
+		$article = $this->createArticle();
 
 		$this->assertFalse($article->localize(array()));
 
@@ -67,33 +61,33 @@ class PolyglotDatabaseTest extends TestCases\DatabaseTestCase
 
 	public function testLangHelper()
 	{
-		$article = new RealArticle();
-		$article->name = 'Start name';
-		$article->title = 'Start title';
-		$article->lang = 'fr';
-		$article->save();
+		$article = $this->createArticle();
 
 		$fr = $article->lang();
-
 		$this->isInstanceOf($fr, 'Polyglot\Dummies\RealArticleLang');
 
 		$en = $article->lang('en');
-
 		$this->isInstanceOf($en, 'Polyglot\Dummies\RealArticleLang');
 	}
 
 	public function testIssetHelper()
 	{
-		$article = new RealArticle();
-		$article->name = 'name';
-		$article->title = 'title';
-		$article->lang = 'fr';
-		$article->save();
+		$article = $this->createArticle();
 
 		$this->assertTrue(isset($article->fr));
 		$this->assertTrue(isset($article->title));
 
-		$this->assertEquals($article->fr->title, 'title');
+		$this->assertEquals($article->fr->title, 'Start title');
 	}
 
+	protected function createArticle()
+	{
+		$article = new RealArticle;
+		$article->name  = 'Start name';
+		$article->title = 'Start title';
+		$article->lang  = 'fr';
+		$article->save();
+
+		return $article;
+	}
 }

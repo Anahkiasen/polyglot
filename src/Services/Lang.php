@@ -39,10 +39,12 @@ class Lang extends Translator
 	public function __construct(Container $app)
 	{
 		$this->app    = $app;
-		$this->loader = $app['translation.loader'];
-		$this->locale = $app['config']->get('app.locale');
-
 		$this->domain = $app['config']->get('polyglot::domain');
+
+		parent::__construct(
+			$app['translation.loader'],
+			$app['config']->get('app.locale')
+		);
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -196,7 +198,9 @@ class Lang extends Translator
 
 		// Base table of locales
 		$this->locale = $locale;
-		$this->app->setLocale($locale);
+		if (method_exists($this->app, 'setLocale')) {
+			$this->app->setLocale($locale);
+		}
 
 		$locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);
 
