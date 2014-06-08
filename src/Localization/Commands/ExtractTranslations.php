@@ -29,9 +29,11 @@ class ExtractTranslations extends AbstractCommand
 	{
 		// Gather files
 		$files = $this->laravel['polyglot.extractor']->getViews();
-		$this->comment('Found '.sizeof($files). ' files:');
-		foreach ($files as $file) {
-			$this->line('-- '.$file);
+		$this->comment('Found '.sizeof($files). ' files');
+		if ($this->option('verbose')) {
+			foreach ($files as $file) {
+				$this->line('-- '.$file);
+			}
 		}
 
 		// Concatenate files
