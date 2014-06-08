@@ -1,5 +1,9 @@
 <?php return array(
 
+	// Whether to swap out the facades (Router, Lang, etc) with
+	// Polyglot's, disable this if you need other packages to do the same
+	'facades' => true,
+
 	// Locales
 	////////////////////////////////////////////////////////////////////
 

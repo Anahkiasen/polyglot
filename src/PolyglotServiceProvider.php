@@ -31,10 +31,14 @@ class PolyglotServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Facades\Lang::swap($this->app['polyglot.translator']);
+		if ($this->app['config']->get('polyglot::facades')) {
+			Facades\Lang::swap($this->app['polyglot.translator']);
+			Facades\Route::swap($this->app['polyglot.router']);
+			Facades\URL::swap($this->app['polyglot.url']);
+		}
 
 		// Configure gettext
-		$locale = $this->app['url']->locale();
+		$locale = $this->app['polyglot.url']->locale();
 		$this->app['polyglot.translator']->setInternalLocale($locale);
 
 		// Add i18n Twig extension
@@ -50,7 +54,7 @@ class PolyglotServiceProvider extends ServiceProvider
 	 */
 	public function provides()
 	{
-		return array('polyglot.translator', 'router', 'url');
+		return array('polyglot.translator', 'polyglot.router', 'polyglot.url');
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -91,12 +95,12 @@ class PolyglotServiceProvider extends ServiceProvider
 		// Bind services
 		$app->singleton('polyglot.translator', 'Polyglot\Services\Lang');
 
-		$app->singleton('router', function ($app) {
+		$app->singleton('polyglot.router', function ($app) {
 			return new Router($app['events'], $app);
 		});
 
-		$app->singleton('url', function ($app) {
-			$routes = $app['router']->getRoutes();
+		$app->singleton('polyglot.url', function ($app) {
+			$routes = $app['polyglot.router']->getRoutes();
 
 			return new UrlGenerator($routes, $app->rebinding('request', function ($app, $request) {
 				$app['url']->setRequest($request);
