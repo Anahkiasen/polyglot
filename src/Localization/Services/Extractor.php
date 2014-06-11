@@ -15,11 +15,15 @@ class Extractor extends AbstractService
 	 */
 	public function getViews()
 	{
-		// Crawl files
-		$files = app_path('views');
-		$files = glob($files.'/{*/*,*/*/*,*}.twig', GLOB_BRACE);
+		$pattern = '/{*/*,*/*/*,*}';
 
-		return $files;
+		// Crawl views and files
+		$views = app_path('views');
+		$views = glob($views.$pattern.'.twig', GLOB_BRACE);
+		$files = app_path();
+		$files = glob($files.$pattern.'.php', GLOB_BRACE);
+
+		return $views + $files;
 	}
 
 	/**
@@ -116,8 +120,12 @@ class Extractor extends AbstractService
 
 		// Build cached templates and add them to arguments
 		foreach ($this->getViews() as $file) {
-			$this->app['twig']->loadTemplate($file);
-			$arguments[] = '"' .$this->app['twig']->getCacheFilename($file). '"';
+			if (strpos($file, '.twig') !== false) {
+				$this->app['twig']->loadTemplate($file);
+				$file = $this->app['twig']->getCacheFilename($file);
+			}
+
+			$arguments[] = '"' .$file. '"';
 		}
 
 		return $this->runGettext($arguments);
