@@ -17,11 +17,14 @@ class Compiler extends AbstractService
 	public function compileLocale($locale)
 	{
 		// Get output directory and file
-		$translated = $this->app['polyglot.extractor']->getLocaleFile($locale);
+		$directory = $this->app['polyglot.translator']->getLocaleFolder($locale);
+		$files     = glob($directory.'/*.po');
 
 		// Recompile MO files
-		$compiled = str_replace('po', 'mo', $translated);
-		$this->execf('msgfmt %s -o %s', $translated, $compiled);
+		foreach ($files as $file) {
+			$compiled = str_replace('po', 'mo', $file);
+			$this->execf('msgfmt %s -o %s', $file, $compiled);
+		}
 
 		// Print success
 		if ($this->command) {
