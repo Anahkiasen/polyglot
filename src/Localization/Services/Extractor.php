@@ -15,13 +15,14 @@ class Extractor extends AbstractService
 	 */
 	public function getViews()
 	{
-		$pattern = '/{*/*,*/*/*,*}';
+		$pattern = '/{*,*/*,*/*/*,*/*/*/*}';
 
 		// Crawl views and files
 		$views = app_path('views');
 		$views = glob($views.$pattern.'.twig', GLOB_BRACE);
 		$files = app_path();
 		$files = glob($files.$pattern.'.php', GLOB_BRACE);
+		!sd($files);
 
 		return $views + $files;
 	}
