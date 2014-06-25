@@ -65,7 +65,7 @@ class Extractor extends AbstractService
 		}
 
 		// Run command
-		$this->extract($directory);
+		$this->extract($translated);
 
 		// Set headers on files
 		$this->setHeaders($translated, $locale);
@@ -99,15 +99,15 @@ class Extractor extends AbstractService
 	/**
 	 * Get the TwigExtractor instance
 	 *
-	 * @param array $directory
+	 * @param array $translated
 	 *
 	 * @return TwigExtractor
 	 */
-	protected function extract($directory)
+	protected function extract($translated)
 	{
 		// Build arguments
 		$domain    = $this->app['polyglot.translator']->getDomain();
-		$arguments = sprintf('--sort-output --default-domain="%s" --language="PHP" --no-location --package-name="%s" --from-code=UTF-8 --force-po -p %s', $domain, ucfirst($domain), $directory);
+		$arguments = sprintf('--sort-output --default-domain="%s" --language="PHP" --no-location --package-name="%s" --from-code=UTF-8 --force-po -o %s', $domain, ucfirst($domain), $translated);
 		$arguments = explode(' ', $arguments);
 
 		// Create temporary folder (bug fix for poEdit in Unix-like OS)
@@ -129,6 +129,7 @@ class Extractor extends AbstractService
 			$arguments[] = '"' .$file. '"';
 		}
 
+		var_dump($arguments);
 		return $this->runGettext($arguments);
 	}
 
