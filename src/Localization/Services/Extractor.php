@@ -22,7 +22,6 @@ class Extractor extends AbstractService
 		$views = glob($views.$pattern.'.twig', GLOB_BRACE);
 		$files = app_path();
 		$files = glob($files.$pattern.'.php', GLOB_BRACE);
-		!sd($files);
 
 		return $views + $files;
 	}
