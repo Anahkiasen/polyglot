@@ -27,6 +27,9 @@
 	// Where the PO/MO files reside
 	'folder' => app_path('lang'),
 
+	// Format of the compiled files
+	'file' => '{domain}.po',
+
 	// Database
 	////////////////////////////////////////////////////////////////////
 
