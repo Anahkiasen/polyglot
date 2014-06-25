@@ -129,7 +129,6 @@ class Extractor extends AbstractService
 			$arguments[] = '"' .$file. '"';
 		}
 
-		var_dump($arguments);
 		return $this->runGettext($arguments);
 	}
 
