@@ -46,8 +46,8 @@ abstract class Polyglot extends Model
 			}
 
 			// Get the current lang and Lang model
-			$lang      = array_get($translated, 'lang', LangFacade::getLocale());
-			$langModel = $model->$lang;
+			$lang               = array_get($translated, 'lang', LangFacade::getLocale());
+			$langModel          = $model->$lang;
 			$translated['lang'] = $lang;
 
 			// Save new model
@@ -126,6 +126,7 @@ abstract class Polyglot extends Model
 	 *
 	 * @param  string $method
 	 * @param  array  $parameters
+	 *
 	 * @return mixed
 	 */
 	public function __call($method, $parameters)
@@ -193,6 +194,7 @@ abstract class Polyglot extends Model
 				}
 
 				$lang = LangFacade::getLocale();
+
 				return $this->$lang ? $this->$lang->$key : null;
 			}
 		}
@@ -220,7 +222,7 @@ abstract class Polyglot extends Model
 		// Build lang arrays
 		foreach ($localization as $key => $value) {
 			foreach ($langs as $lang) {
-				${$lang}[$key] = array_get($value, $lang);
+				${$lang}[$key]   = array_get($value, $lang);
 				${$lang}['lang'] = $lang;
 			}
 		}

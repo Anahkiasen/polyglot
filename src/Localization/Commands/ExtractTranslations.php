@@ -32,7 +32,7 @@ class ExtractTranslations extends AbstractCommand
 
 		// Gather files
 		$files = $this->laravel['polyglot.extractor']->getViews();
-		$this->comment('Found '.sizeof($files). ' files');
+		$this->comment('Found '.sizeof($files).' files');
 		if ($this->option('verbose')) {
 			foreach ($files as $file) {
 				$this->line('-- '.$file);
@@ -65,7 +65,7 @@ class ExtractTranslations extends AbstractCommand
 	protected function getOptions()
 	{
 		return array(
-			array('no-clear',   null, InputOption::VALUE_NONE, 'Clear previously generated files', null),
+			array('no-clear', null, InputOption::VALUE_NONE, 'Clear previously generated files', null),
 			array('no-compile', null, InputOption::VALUE_NONE, "Don't compile PO files to MO", null),
 		);
 	}

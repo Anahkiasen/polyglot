@@ -44,7 +44,7 @@ abstract class AbstractService
 	 * Sprintf and execute a command
 	 *
 	 * @param string $message
-	 * @param string $parameters...
+	 * @param string $parameters ...
 	 *
 	 * @return void
 	 */

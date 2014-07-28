@@ -84,7 +84,7 @@ class Extractor extends AbstractService
 		$contents = $this->app['files']->get($file);
 		$contents = strtr($contents, array(
 			'charset=CHARSET'                     => 'charset='.$this->app['polyglot.translator']->getEncoding(),
-			'Language: '                          => 'Language: ' .$this->app['polyglot.translator']->shortToLongLocale($locale),
+			'Language: '                          => 'Language: '.$this->app['polyglot.translator']->shortToLongLocale($locale),
 			'Language-Team: LANGUAGE <LL@li.org>' => 'Language-Team: Madewithlove <maxime@madewithlove.be>',
 		));
 
@@ -126,7 +126,7 @@ class Extractor extends AbstractService
 				$file = $this->app['twig']->getCacheFilename($file);
 			}
 
-			$arguments[] = '"' .$file. '"';
+			$arguments[] = '"'.$file.'"';
 		}
 
 		return $this->runGettext($arguments);
@@ -142,20 +142,20 @@ class Extractor extends AbstractService
 	protected function runGettext($arguments)
 	{
 		// Build command
-    $command  = 'xgettext';
-    $command .= ' '.join(' ', $arguments);
+		$command = 'xgettext';
+		$command .= ' '.join(' ', $arguments);
 
-    $status = 0;
-    $output = system($command, $status);
-    if ($status !== 0) {
-      throw new ExtractionException(sprintf(
-        'Gettext command "%s" failed with error code %s and output: %s',
-        $command,
-        $status,
-        $output
-      ));
-    }
+		$status = 0;
+		$output = system($command, $status);
+		if ($status !== 0) {
+			throw new ExtractionException(sprintf(
+				'Gettext command "%s" failed with error code %s and output: %s',
+				$command,
+				$status,
+				$output
+			));
+		}
 
-    return $output;
+		return $output;
 	}
 }

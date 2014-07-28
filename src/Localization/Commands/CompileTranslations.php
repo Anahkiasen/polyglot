@@ -2,7 +2,6 @@
 namespace Polyglot\Localization\Commands;
 
 use Polyglot\Abstracts\AbstractCommand;
-use Illuminate\Console\Command;
 
 class CompileTranslations extends AbstractCommand
 {

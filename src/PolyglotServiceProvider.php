@@ -37,10 +37,10 @@ class PolyglotServiceProvider extends ServiceProvider
 		});
 
 		// Bind extractors and compilers
-		$this->app->bind('polyglot.compiler',  'Polyglot\Localization\Services\Compiler');
+		$this->app->bind('polyglot.compiler', 'Polyglot\Localization\Services\Compiler');
 		$this->app->bind('polyglot.extractor', 'Polyglot\Localization\Services\Extractor');
-		$this->app->bind('polyglot.extract',   'Polyglot\Localization\Commands\ExtractTranslations');
-		$this->app->bind('polyglot.compile',   'Polyglot\Localization\Commands\CompileTranslations');
+		$this->app->bind('polyglot.extract', 'Polyglot\Localization\Commands\ExtractTranslations');
+		$this->app->bind('polyglot.compile', 'Polyglot\Localization\Commands\CompileTranslations');
 
 		$this->commands(['polyglot.extract', 'polyglot.compile']);
 	}

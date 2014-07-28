@@ -2,8 +2,8 @@
 namespace Polyglot\Services;
 
 use Illuminate\Container\Container;
-use Illuminate\Translation\Translator;
 use Illuminate\Support\Str;
+use Illuminate\Translation\Translator;
 
 /**
  * General localization helpers
@@ -111,6 +111,7 @@ class Lang extends Translator
 	 * @param  string $key
 	 * @param  array  $replace
 	 * @param  string $locale
+	 *
 	 * @return string
 	 */
 	public function get($key, array $replace = array(), $locale = null)
@@ -187,6 +188,7 @@ class Lang extends Translator
 	 * Sets the locale according to the current language
 	 *
 	 * @param string $locale A language string to use
+	 *
 	 * @return
 	 */
 	public function setInternalLocale($locale = false)

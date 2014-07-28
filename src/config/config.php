@@ -2,34 +2,27 @@
 
 	// Whether to swap out the facades (Router, Lang, etc) with
 	// Polyglot's, disable this if you need other packages to do the same
-	'facades' => true,
-
+	'facades'       => true,
 	// Locales
 	////////////////////////////////////////////////////////////////////
 
 	// The default locale if none is provided in the URL
 	// Leave empty to force the use of locales prefixes in URLs
-	'default' => 'en',
-
+	'default'       => 'en',
 	// The fallback locale for translations
 	// If null, the default locale is used
-	'fallback' => null,
-
+	'fallback'      => null,
 	// The available locales
-	'locales' => array(),
-
+	'locales'       => array(),
 	// Gettext
 	////////////////////////////////////////////////////////////////////
 
 	// The domain of your translations, for gettext use
-	'domain' => 'messages',
-
+	'domain'        => 'messages',
 	// Where the PO/MO files reside
-	'folder' => app_path('lang'),
-
+	'folder'        => app_path('lang'),
 	// Format of the compiled files
-	'file' => '{domain}.po',
-
+	'file'          => '{domain}.po',
 	// Database
 	////////////////////////////////////////////////////////////////////
 
