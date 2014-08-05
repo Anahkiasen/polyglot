@@ -4,7 +4,7 @@ namespace Polyglot\TestCases;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Facades\Lang;
 
-class DatabaseTestCase extends PolyglotTestCase
+abstract class DatabaseTestCase extends PolyglotTestCase
 {
 	/**
 	 * Set up the tests
