@@ -61,7 +61,9 @@ class PolyglotServiceProvider extends ServiceProvider
 
 		// Configure gettext
 		$locale = $this->app['polyglot.url']->locale();
-		$this->app['polyglot.translator']->setInternalLocale($locale);
+		if ($locale) {
+			$this->app['polyglot.translator']->setInternalLocale($locale);
+		}
 
 		// Add i18n Twig extension
 		if ($this->app->bound('twig')) {
