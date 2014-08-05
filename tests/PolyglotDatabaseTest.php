@@ -17,7 +17,7 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 		$article = $this->createArticle();
 
 		$article = RealArticle::first();
-		$start = $article->updated_at;
+		$start   = $article->updated_at;
 
 		sleep(1);
 
@@ -34,12 +34,12 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 		$article = $this->createArticle();
 
 		$article = RealArticle::withLang('fr')->where('id', $article->id)->first();
-		$array = $article->toArray();
+		$array   = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 
 		// empty
 		$article = RealArticle::withLang()->where('id', $article->id)->first();
-		$array = $article->toArray();
+		$array   = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 	}
 
@@ -82,7 +82,7 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 
 	protected function createArticle()
 	{
-		$article = new RealArticle;
+		$article        = new RealArticle;
 		$article->name  = 'Start name';
 		$article->title = 'Start title';
 		$article->lang  = 'fr';

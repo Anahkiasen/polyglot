@@ -9,10 +9,10 @@ class RouterTest extends PolyglotTestCase
 	{
 		$prefix = $this->router->getRoutesPrefix(array('before' => 'auth'));
 		$this->assertEquals(array('before' => 'auth'), $prefix);
-	 }
+	}
 
-	 public function testReturnsGroupIfLocaleIsDefault()
-	 {
+	public function testReturnsGroupIfLocaleIsDefault()
+	{
 		$this->app['request'] = $this->mockRequest('en');
 
 		$prefix = $this->router->getRoutesPrefix(array('before' => 'auth'));
@@ -38,7 +38,7 @@ class RouterTest extends PolyglotTestCase
 	public function testCanCreateActualGroups()
 	{
 		$this->app['request'] = $this->mockRequest('en');
-		$router = $this->router;
+		$router               = $this->router;
 
 		$this->router->groupLocale(array('before' => 'auth'), function () use ($router) {
 			$router->get('foobar', 'foobar');
@@ -54,7 +54,7 @@ class RouterTest extends PolyglotTestCase
 	public function testCanCreateGroupsWithoutArrays()
 	{
 		$this->app['request'] = $this->mockRequest('en');
-		$router = $this->router;
+		$router               = $this->router;
 
 		$this->router->groupLocale(function () use ($router) {
 			$router->get('foobar', 'foobar');

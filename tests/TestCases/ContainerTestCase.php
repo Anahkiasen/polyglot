@@ -62,7 +62,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 	{
 		if (in_array($key, ['translator', 'url', 'router'])) {
 			$key = 'polyglot.'.$key;
-			}
+		}
 
 		$key = Str::snake($key);
 		$key = str_replace('_', '.', $key);

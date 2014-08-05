@@ -37,9 +37,9 @@ class LangTest extends PolyglotTestCase
 
 	public function testCanSetLocaleFromLanguage()
 	{
-		$locale = $this->translator->setInternalLocale('en');
+		$locale           = $this->translator->setInternalLocale('en');
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
-		$matcher = strlen($locale) == 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
+		$matcher          = strlen($locale) == 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
 
 		$this->assertEquals($locale, $matcher);
 		$this->assertEquals('January', $translatedString);
@@ -48,9 +48,9 @@ class LangTest extends PolyglotTestCase
 	public function testCanSetLocaleFromCurrent()
 	{
 		$this->translator->setLocale('en');
-		$locale = $this->translator->setInternalLocale();
+		$locale           = $this->translator->setInternalLocale();
 		$translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
-		$matcher = strlen($locale) == 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
+		$matcher          = strlen($locale) == 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
 
 		$this->assertEquals($locale, $matcher);
 		$this->assertEquals('January', $translatedString);

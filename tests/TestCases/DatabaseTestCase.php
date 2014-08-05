@@ -1,9 +1,8 @@
 <?php
 namespace Polyglot\TestCases;
 
-use Polyglot\Polyglot;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Support\Facades\Lang;
 
 class DatabaseTestCase extends PolyglotTestCase
 {

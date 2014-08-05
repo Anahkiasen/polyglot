@@ -12,7 +12,7 @@ abstract class AbstractCommand extends Command
 	 *
 	 * @return void
 	 */
-	protected function forLocales(Callable $closure)
+	protected function forLocales(callable $closure)
 	{
 		$locales = $this->laravel['polyglot.translator']->getAvailable();
 		foreach ($locales as $locale) {
