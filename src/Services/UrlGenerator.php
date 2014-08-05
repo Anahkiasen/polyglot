@@ -15,7 +15,9 @@ class UrlGenerator extends IlluminateUrlGenerator
 	 */
 	public function locale()
 	{
-		return $this->request->segment(1);
+		$locale = $this->request->segment(1);
+
+		return strlen($locale) == 2 ? $locale : null;
 	}
 
 	/**
