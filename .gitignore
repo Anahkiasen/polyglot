@@ -1,4 +1,5 @@
 # Dependencies
+composer.lock
 vendor
 
 # Tests
