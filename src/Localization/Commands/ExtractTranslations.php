@@ -31,11 +31,11 @@ class ExtractTranslations extends AbstractCommand
 		$this->call('twig:clear');
 
 		// Gather files
-		$files = $this->laravel['polyglot.extractor']->getViews();
-		$this->comment('Found '.sizeof($files).' files');
+		$files = $this->laravel['polyglot.extractor']->getFiles();
+		$this->comment('Found '.$files->count().' files');
 		if ($this->option('verbose')) {
 			foreach ($files as $file) {
-				$this->line('-- '.$file);
+				$this->line('-- '.$file->getPathname());
 			}
 		}
 

@@ -2,6 +2,7 @@
 namespace Polyglot\Localization\Services;
 
 use Polyglot\Localization\Exceptions\ExtractionException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Extract translations form Twig files to PO files
@@ -11,19 +12,14 @@ class Extractor extends AbstractService
 	/**
 	 * Get the views translations are in
 	 *
-	 * @return array
+	 * @return Finder
 	 */
-	public function getViews()
+	public function getFiles()
 	{
-		$pattern = '/{*,*/*,*/*/*,*/*/*/*}';
+		$finder = new Finder();
+		$finder = $finder->files()->in(app_path())->name('/\.(php|twig)$/');
 
-		// Crawl views and files
-		$views = app_path('views');
-		$views = glob($views.$pattern.'.twig', GLOB_BRACE);
-		$files = app_path();
-		$files = glob($files.$pattern.'.php', GLOB_BRACE);
-
-		return $views + $files;
+		return $finder;
 	}
 
 	/**
@@ -120,13 +116,14 @@ class Extractor extends AbstractService
 		}
 
 		// Build cached templates and add them to arguments
-		foreach ($this->getViews() as $file) {
-			if (strpos($file, '.twig') !== false) {
-				$this->app['twig']->loadTemplate($file);
-				$file = $this->app['twig']->getCacheFilename($file);
+		foreach ($this->getFiles() as $file) {
+			$path = $file->getPathname();
+			if ($file->getExtension() === 'twig') {
+				$this->app['twig']->loadTemplate($path);
+				$path = $this->app['twig']->getCacheFilename($path);
 			}
 
-			$arguments[] = '"'.$file.'"';
+			$arguments[] = '"'.$path.'"';
 		}
 
 		return $this->runGettext($arguments);
