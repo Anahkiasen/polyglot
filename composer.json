@@ -16,15 +16,15 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"illuminate/container": "~4",
-		"illuminate/support": "~4"
+		"illuminate/container": "~4.2",
+		"illuminate/support": "~4.2"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master",
-		"illuminate/routing": "~4",
-		"illuminate/database": "~4",
-		"illuminate/translation": "~4",
-		"patchwork/utf8": "dev-master"
+		"mockery/mockery": "~0.9",
+		"illuminate/routing": "~4.2",
+		"illuminate/database": "~4.2",
+		"illuminate/translation": "~4.2",
+		"patchwork/utf8": "~1.1"
 	},
 	"autoload": {
 		"psr-4": {
