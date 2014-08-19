@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1
+
+- Fix recursive finding of translatable files in app/ directory
+
 ## 1.3.0
 
 - Fix a bug in Url::locale
