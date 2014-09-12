@@ -28,7 +28,7 @@ class ExtractTranslations extends AbstractCommand
 	public function fire()
 	{
 		$this->call('cache:clear');
-		$this->call('twig:clear');
+		$this->call('twig:clean');
 
 		// Gather files
 		$files = $this->laravel['polyglot.extractor']->getFiles();
