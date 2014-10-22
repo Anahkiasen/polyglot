@@ -4,9 +4,15 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - hhvm-nightly
 
 before_script:
-  - composer self-update
-  - composer install --dev
+  - travis_retry composer self-update
+  - travis_retry composer install --no-interaction --prefer-source --dev
+
+matrix:
+  allow_failures:
+    - php: hhvm-nightly
+  fast_finish: true
 
 script: phpunit --process-isolation
