@@ -185,11 +185,24 @@ class Lang extends Translator
 	}
 
 	/**
+	 * Get the short version of the internal locale
+	 *
+	 * @return string
+	 */
+	public function getShortInternalLocale()
+	{
+		$locale = $this->getInternalLocale();
+		$locale = preg_replace('/.*([a-z]{2}_[A-Z]{2}).*/', '$1', $locale);
+
+		return $locale;
+	}
+
+	/**
 	 * Sets the locale according to the current language
 	 *
-	 * @param string $locale A language string to use
+	 * @param string|boolean $locale A language string to use
 	 *
-	 * @return
+	 * @return string
 	 */
 	public function setInternalLocale($locale = false)
 	{
