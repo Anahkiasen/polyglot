@@ -14,35 +14,23 @@ class PolyglotObserver
 	 */
 	public function saving(Polyglot $model)
 	{
-		$polyglotAttributes = $model->getPolyglotAttributes();
-
-		// Get the model's attributes
-		$attributes = $model->getAttributes();
-		$translated = array();
-
 		// Extract polyglot attributes
-		foreach ($attributes as $key => $value) {
-			if (in_array($key, $polyglotAttributes)) {
-				unset($attributes[$key]);
-				unset($model[$key]);
-				$translated[$key] = $value;
-			}
-		}
+		$translated = $this->extractTranslatedAttributes($model);
 
 		// If no localized attributes, continue
 		if (empty($translated)) {
 			return true;
 		}
 
-		// Get the current lang and Lang model
-		$lang               = array_get($translated, 'lang', Lang::getLocale());
-		$langModel          = $model->$lang;
-		$translated['lang'] = $lang;
-
 		// Save new model
 		if (!$model->exists) {
 			$model->save();
 		}
+
+		// Get the current lang and Lang model
+		$lang               = array_get($translated, 'lang', Lang::getLocale());
+		$langModel          = $model->$lang;
+		$translated['lang'] = $lang;
 
 		// If no Lang model or the fallback was returned, create a new one
 		if (!$langModel || ($langModel->lang !== $lang)) {
@@ -63,5 +51,26 @@ class PolyglotObserver
 		if ($model->save() && $langModel->save()) {
 			return true;
 		}
+	}
+
+	/**
+	 * @param Polyglot $model
+	 *
+	 * @return array
+	 */
+	protected function extractTranslatedAttributes(Polyglot &$model)
+	{
+		$attributes = $model->getAttributes();
+		$polyglot   = $model->getPolyglotAttributes();
+
+		$translated = array();
+		foreach ($attributes as $key => $value) {
+			if (in_array($key, $polyglot)) {
+				$translated[$key] = $value;
+				unset($model[$key]);
+			}
+		}
+
+		return $translated;
 	}
 }
