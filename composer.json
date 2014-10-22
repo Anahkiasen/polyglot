@@ -1,34 +1,37 @@
 {
-	"name": "anahkiasen/polyglot",
-	"description": "Laravel localization helpers and models",
-	"license": "MIT",
-	"keywords": [
-		"laravel",
-		"localization",
-		"translation",
-		"model"
-	],
-	"authors": [
-		{
-			"name": "Maxime Fabre",
-			"email": "ehtnam6@gmail.Com"
-		}
-	],
-	"require": {
-		"php": ">=5.4.0",
-		"illuminate/container": "~4.2",
-		"illuminate/support": "~4.2"
-	},
-	"require-dev": {
-		"mockery/mockery": "~0.9",
-		"illuminate/routing": "~4.2",
-		"illuminate/database": "~4.2",
-		"illuminate/translation": "~4.2",
-		"patchwork/utf8": "~1.1"
-	},
-	"autoload": {
-		"psr-4": {
-			"Polyglot\\": ["src", "tests"]
-		}
-	}
+  "name": "anahkiasen/polyglot",
+  "description": "Laravel localization helpers and models",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "localization",
+    "translation",
+    "model"
+  ],
+  "authors": [
+    {
+      "name": "Maxime Fabre",
+      "email": "ehtnam6@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/container": "~4.2",
+    "illuminate/support": "~4.2"
+  },
+  "require-dev": {
+    "mockery/mockery": "~0.9",
+    "illuminate/routing": "~4.2",
+    "illuminate/database": "~4.2",
+    "illuminate/translation": "~4.2",
+    "patchwork/utf8": "~1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Polyglot\\": [
+        "src",
+        "tests"
+      ]
+    }
+  }
 }
