@@ -67,7 +67,7 @@ class PolyglotServiceProvider extends ServiceProvider
 
 		// Add i18n Twig extension
 		if ($this->app->bound('twig')) {
-			$this->app['twig']->addExtension(new Twig_Extensions_Extension_I18n);
+			$this->app['twig']->addExtension(new Twig_Extensions_Extension_I18n());
 		}
 	}
 

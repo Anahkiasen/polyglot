@@ -21,7 +21,7 @@ class Article extends Polyglot
 	 */
 	public function hasOne($related, $foreignKey = null, $localKey = null)
 	{
-		return new $related;
+		return new $related();
 	}
 
 	public function getAgbAcceptedAttribute()

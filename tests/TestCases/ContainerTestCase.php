@@ -28,7 +28,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
 		date_default_timezone_set('Europe/London');
 
 		// Create container
-		$this->app = new Container;
+		$this->app = new Container();
 
 		$provider = new EventServiceProvider($this->app);
 		$provider->register();

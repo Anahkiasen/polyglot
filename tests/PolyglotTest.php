@@ -8,7 +8,7 @@ class PolyglotTest extends PolyglotTestCase
 {
 	public function testCanGetTranslatedAttributes()
 	{
-		$article = new Article;
+		$article = new Article();
 
 		$this->assertEquals('Name', $article->en->name);
 		$this->assertEquals('Nom', $article->fr->name);
@@ -18,7 +18,7 @@ class PolyglotTest extends PolyglotTestCase
 
 	public function testPolyglotAttributesAreSet()
 	{
-		$article = new Article;
+		$article = new Article();
 
 		$this->assertTrue(isset($article->name));
 		$this->assertTrue(isset($article->agb_accepted));

@@ -2,7 +2,6 @@
 namespace Polyglot\TestCases;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Support\Facades\Lang;
 
 abstract class DatabaseTestCase extends PolyglotTestCase
 {
@@ -23,10 +22,10 @@ abstract class DatabaseTestCase extends PolyglotTestCase
 	 */
 	protected function createCapsule()
 	{
-		$capsule = new Capsule;
+		$capsule = new Capsule();
 		$capsule->addConnection(array(
 			'driver'   => 'sqlite',
-			'database' => ':memory:'
+			'database' => ':memory:',
 		));
 
 		$capsule->setEventDispatcher($this->app['events']);
