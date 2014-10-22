@@ -3,7 +3,7 @@ namespace Polyglot;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang as LangFacade;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Abstract model that eases the localization of model
@@ -19,62 +19,12 @@ abstract class Polyglot extends Model
 
 	/**
 	 * The "booting" method of the model.
-	 *
-	 * @return void
 	 */
 	protected static function boot()
 	{
-		static::saving(function ($model) {
-			$polyglotAttributes = $model->getPolyglotAttributes();
+		parent::boot();
 
-			// Get the model's attributes
-			$attributes = $model->getAttributes();
-			$translated = array();
-
-			// Extract polyglot attributes
-			foreach ($attributes as $key => $value) {
-				if (in_array($key, $polyglotAttributes)) {
-					unset($attributes[$key]);
-					unset($model[$key]);
-					$translated[$key] = $value;
-				}
-			}
-
-			// If no localized attributes, continue
-			if (empty($translated)) {
-				return true;
-			}
-
-			// Get the current lang and Lang model
-			$lang               = array_get($translated, 'lang', LangFacade::getLocale());
-			$langModel          = $model->$lang;
-			$translated['lang'] = $lang;
-
-			// Save new model
-			if (!$model->exists) {
-				$model->save();
-			}
-
-			// If no Lang model or the fallback was returned, create a new one
-			if (!$langModel || ($langModel->lang !== $lang)) {
-				$langModel = $model->getLangClass();
-				$langModel = new $langModel($translated);
-				$model->translations()->save($langModel);
-				$model->setRelation($lang, $langModel);
-			}
-
-			$langModel->fill($translated);
-
-			// Save and update model timestamp
-			if ($model->exists && $model->timestamps && $langModel->getDirty()) {
-				$time = $model->freshTimestamp();
-				$model->setUpdatedAt($time);
-			}
-
-			if ($model->save() && $langModel->save()) {
-				return true;
-			}
-		});
+		static::saving('Polyglot\PolyglotObserver@saving');
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -86,12 +36,12 @@ abstract class Polyglot extends Model
 	 *
 	 * @param string $lang A language to use
 	 *
-	 * @return HasOne
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
 	 */
 	public function lang($lang = null)
 	{
 		if (!$lang) {
-			$lang = LangFacade::getLocale();
+			$lang = Lang::getLocale();
 		}
 
 		return $this->$lang();
@@ -100,7 +50,7 @@ abstract class Polyglot extends Model
 	/**
 	 * Get all translations
 	 *
-	 * @return Collection
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
 	public function translations()
 	{
@@ -193,7 +143,7 @@ abstract class Polyglot extends Model
 					return $this->attributes[$key];
 				}
 
-				$lang = LangFacade::getLocale();
+				$lang = Lang::getLocale();
 
 				return $this->$lang ? $this->$lang->$key : null;
 			}
@@ -210,6 +160,8 @@ abstract class Polyglot extends Model
 	 * Localize a model with an array of lang arrays
 	 *
 	 * @param array $localization An array in the form [field][lang][value]
+	 *
+	 * @return boolean|null
 	 */
 	public function localize($localization)
 	{
@@ -244,7 +196,7 @@ abstract class Polyglot extends Model
 	 * Localize a "with" method
 	 *
 	 * @param Query  $query
-	 * @param string $relations,...
+	 * @param string $relations ...
 	 *
 	 * @return Query
 	 */
@@ -254,7 +206,7 @@ abstract class Polyglot extends Model
 		$query     = array_shift($relations);
 
 		if (empty($relations)) {
-			$relations = array(LangFacade::getLocale());
+			$relations = array(Lang::getLocale());
 		}
 
 		return $query->with($relations);

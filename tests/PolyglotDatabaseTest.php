@@ -14,7 +14,7 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 
 	public function testUpdateTimestampsOnSave()
 	{
-		$article = $this->createArticle();
+		$this->createArticle();
 
 		$article = RealArticle::first();
 		$start   = $article->updated_at;
@@ -30,16 +30,13 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 
 	public function testScopeWithLang()
 	{
-		// Test scope with lang
 		$article = $this->createArticle();
 
 		$article = RealArticle::withLang('fr')->where('id', $article->id)->first();
-		$array   = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 
 		// empty
 		$article = RealArticle::withLang()->where('id', $article->id)->first();
-		$array   = $article->toArray();
 		$this->assertEquals($article->fr->title, "Start title");
 	}
 
@@ -79,6 +76,10 @@ class PolyglotDatabaseTest extends DatabaseTestCase
 
 		$this->assertEquals($article->fr->title, 'Start title');
 	}
+
+	//////////////////////////////////////////////////////////////////////
+	////////////////////////////// HELPERS ///////////////////////////////
+	//////////////////////////////////////////////////////////////////////
 
 	protected function createArticle()
 	{

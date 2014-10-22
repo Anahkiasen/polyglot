@@ -5,9 +5,18 @@ use Polyglot\Polyglot;
 
 class RealArticle extends Polyglot
 {
-	protected $guarded = array('created_at', 'updated_at');
+	/**
+	 * @type array
+	 */
+	protected $fillable = ['name'];
 
+	/**
+	 * @type string
+	 */
 	protected $table = 'articles';
 
-	protected $polyglot = array('title', 'body');
+	/**
+	 * @type array
+	 */
+	protected $polyglot = ['title', 'body'];
 }
