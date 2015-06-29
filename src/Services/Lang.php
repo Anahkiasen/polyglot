@@ -1,4 +1,5 @@
 <?php
+
 namespace Polyglot\Services;
 
 use Illuminate\Container\Container;
@@ -6,288 +7,288 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\Translator;
 
 /**
- * General localization helpers
+ * General localization helpers.
  */
 class Lang extends Translator
 {
-	/**
-	 * The IoC Container
-	 *
-	 * @var Container
-	 */
-	protected $app;
+    /**
+     * The IoC Container.
+     *
+     * @var Container
+     */
+    protected $app;
 
-	/**
-	 * The translation domain
-	 *
-	 * @var string
-	 */
-	protected $domain;
+    /**
+     * The translation domain.
+     *
+     * @var string
+     */
+    protected $domain;
 
-	/**
-	 * The localization encoding
-	 *
-	 * @var string
-	 */
-	protected $encoding = 'UTF-8';
+    /**
+     * The localization encoding.
+     *
+     * @var string
+     */
+    protected $encoding = 'UTF-8';
 
-	/**
-	 * Build the language class
-	 *
-	 * @param Container $app
-	 */
-	public function __construct(Container $app)
-	{
-		$this->app    = $app;
-		$this->domain = $app['config']->get('polyglot::domain');
+    /**
+     * Build the language class.
+     *
+     * @param Container $app
+     */
+    public function __construct(Container $app)
+    {
+        $this->app = $app;
+        $this->domain = $app['config']->get('polyglot::domain');
 
-		parent::__construct(
-			$app['translation.loader'],
-			$app['config']->get('app.locale')
-		);
-	}
+        parent::__construct(
+            $app['translation.loader'],
+            $app['config']->get('app.locale')
+        );
+    }
 
-	////////////////////////////////////////////////////////////////////
-	//////////////////////////////// DOMAIN ////////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    //////////////////////////////// DOMAIN ////////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Get the translation domain
-	 *
-	 * @return string
-	 */
-	public function getDomain()
-	{
-		return $this->domain;
-	}
+    /**
+     * Get the translation domain.
+     *
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
 
-	/**
-	 * Get the folder where the translations reside
-	 *
-	 * @param string $subfolder
-	 *
-	 * @return string
-	 */
-	public function getTranslationsFolder($subfolder = null)
-	{
-		$subfolder = $subfolder ? '/'.$subfolder : $subfolder;
+    /**
+     * Get the folder where the translations reside.
+     *
+     * @param string $subfolder
+     *
+     * @return string
+     */
+    public function getTranslationsFolder($subfolder = null)
+    {
+        $subfolder = $subfolder ? '/'.$subfolder : $subfolder;
 
-		return $this->app['config']->get('polyglot::folder').$subfolder;
-	}
+        return $this->app['config']->get('polyglot::folder').$subfolder;
+    }
 
-	/**
-	 * Get the folder where a locale's translations reside
-	 *
-	 * @param string $locale
-	 *
-	 * @return string
-	 */
-	public function getLocaleFolder($locale)
-	{
-		$folder = sprintf('%s.%s/LC_MESSAGES', $this->shortToLongLocale($locale), $this->getEncoding(true));
+    /**
+     * Get the folder where a locale's translations reside.
+     *
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function getLocaleFolder($locale)
+    {
+        $folder = sprintf('%s.%s/LC_MESSAGES', $this->shortToLongLocale($locale), $this->getEncoding(true));
 
-		return $this->getTranslationsFolder($folder);
-	}
+        return $this->getTranslationsFolder($folder);
+    }
 
-	/**
-	 * Get the encoding
-	 *
-	 * @param boolean $slug
-	 *
-	 * @return string
-	 */
-	public function getEncoding($slug = false)
-	{
-		return $slug ? Str::slug($this->encoding, '') : $this->encoding;
-	}
+    /**
+     * Get the encoding.
+     *
+     * @param bool $slug
+     *
+     * @return string
+     */
+    public function getEncoding($slug = false)
+    {
+        return $slug ? Str::slug($this->encoding, '') : $this->encoding;
+    }
 
-	////////////////////////////////////////////////////////////////////
-	/////////////////////////// TRANSLATIONS ///////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    /////////////////////////// TRANSLATIONS ///////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Get the translation for the given key, or fallback to fallback locale
-	 *
-	 * @param  string $key
-	 * @param  array  $replace
-	 * @param  string $locale
-	 *
-	 * @return string
-	 */
-	public function get($key, array $replace = array(), $locale = null)
-	{
-		// Get translation and fallback
-		$fallback    = $this->fallbackLocale();
-		$translation = parent::get($key, $replace, $locale);
-		if ($translation == $key and $fallback !== $this->locale) {
-			return parent::get($key, $replace, $fallback);
-		}
+    /**
+     * Get the translation for the given key, or fallback to fallback locale.
+     *
+     * @param string $key
+     * @param array  $replace
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function get($key, array $replace = [], $locale = null)
+    {
+        // Get translation and fallback
+        $fallback = $this->fallbackLocale();
+        $translation = parent::get($key, $replace, $locale);
+        if ($translation === $key and $fallback !== $this->locale) {
+            return parent::get($key, $replace, $fallback);
+        }
 
-		return $translation;
-	}
+        return $translation;
+    }
 
-	////////////////////////////////////////////////////////////////////
-	///////////////////////////// LOCALES //////////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////////// LOCALES //////////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Whether a given language is the current one
-	 *
-	 * @param string $locale The language to check
-	 *
-	 * @return boolean
-	 */
-	public function active($locale)
-	{
-		return $locale == $this->getLocale();
-	}
+    /**
+     * Whether a given language is the current one.
+     *
+     * @param string $locale The language to check
+     *
+     * @return bool
+     */
+    public function active($locale)
+    {
+        return $locale === $this->getLocale();
+    }
 
-	/**
-	 * Get the default locale
-	 *
-	 * @return string
-	 */
-	public function defaultLocale()
-	{
-		return $this->app['config']->get('polyglot::default');
-	}
+    /**
+     * Get the default locale.
+     *
+     * @return string
+     */
+    public function defaultLocale()
+    {
+        return $this->app['config']->get('polyglot::default');
+    }
 
-	/**
-	 * Get the fallback locale
-	 *
-	 * @return string
-	 */
-	public function fallbackLocale()
-	{
-		return $this->app['config']->get('polyglot::fallback') ?: $this->app['config']->get('polyglot::default');
-	}
+    /**
+     * Get the fallback locale.
+     *
+     * @return string
+     */
+    public function fallbackLocale()
+    {
+        return $this->app['config']->get('polyglot::fallback') ?: $this->app['config']->get('polyglot::default');
+    }
 
-	/**
-	 * Change the current language
-	 *
-	 * @param string $locale The language to change to
-	 *
-	 * @return string
-	 */
-	public function setLocale($locale)
-	{
-		$this->locale = $this->sanitize($locale);
-	}
+    /**
+     * Change the current language.
+     *
+     * @param string $locale The language to change to
+     *
+     * @return string
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $this->sanitize($locale);
+    }
 
-	/**
-	 * Get the internal locale
-	 *
-	 * @return string
-	 */
-	public function getInternalLocale()
-	{
-		return setlocale(LC_ALL, 0);
-	}
+    /**
+     * Get the internal locale.
+     *
+     * @return string
+     */
+    public function getInternalLocale()
+    {
+        return setlocale(LC_ALL, 0);
+    }
 
-	/**
-	 * Get the short version of the internal locale
-	 *
-	 * @return string
-	 */
-	public function getShortInternalLocale()
-	{
-		$locale = $this->getInternalLocale();
-		$locale = preg_replace('/.*([a-z]{2}_[A-Z]{2}).*/', '$1', $locale);
+    /**
+     * Get the short version of the internal locale.
+     *
+     * @return string
+     */
+    public function getShortInternalLocale()
+    {
+        $locale = $this->getInternalLocale();
+        $locale = preg_replace('/.*([a-z]{2}_[A-Z]{2}).*/', '$1', $locale);
 
-		return $locale;
-	}
+        return $locale;
+    }
 
-	/**
-	 * Sets the locale according to the current language
-	 *
-	 * @param string|boolean $locale A language string to use
-	 *
-	 * @return string
-	 */
-	public function setInternalLocale($locale = false)
-	{
-		// If nothing was given, just use current language
-		if (!$locale) {
-			$locale = $this->getLocale();
-		}
+    /**
+     * Sets the locale according to the current language.
+     *
+     * @param string|bool $locale A language string to use
+     *
+     * @return string
+     */
+    public function setInternalLocale($locale = false)
+    {
+        // If nothing was given, just use current language
+        if (!$locale) {
+            $locale = $this->getLocale();
+        }
 
-		// Base table of locales
-		$this->locale = $locale;
-		if (method_exists($this->app, 'setLocale')) {
-			$this->app->setLocale($locale);
-		}
+        // Base table of locales
+        $this->locale = $locale;
+        if (method_exists($this->app, 'setLocale')) {
+            $this->app->setLocale($locale);
+        }
 
-		$locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);
+        $locale = $this->shortToLongLocale($locale).'.'.$this->getEncoding(true);
 
-		// Set locale
-		putenv('LC_ALL='.$locale);
-		setlocale(LC_ALL, $locale);
+        // Set locale
+        putenv('LC_ALL='.$locale);
+        setlocale(LC_ALL, $locale);
 
-		// Specify the location of the translation tables
-		bindtextdomain($this->domain, $this->getTranslationsFolder());
-		textdomain($this->domain);
+        // Specify the location of the translation tables
+        bindtextdomain($this->domain, $this->getTranslationsFolder());
+        textdomain($this->domain);
 
-		return $this->getInternalLocale();
-	}
+        return $this->getInternalLocale();
+    }
 
-	/**
-	 * Get all available languages
-	 *
-	 * @return array An array of languages
-	 */
-	public function getAvailable()
-	{
-		return $this->app['config']->get('polyglot::locales');
-	}
+    /**
+     * Get all available languages.
+     *
+     * @return array An array of languages
+     */
+    public function getAvailable()
+    {
+        return $this->app['config']->get('polyglot::locales');
+    }
 
-	/**
-	 * Check whether a language is valid or not
-	 *
-	 * @param string $locale The language
-	 *
-	 * @return boolean
-	 */
-	public function valid($locale)
-	{
-		return in_array($locale, $this->getAvailable());
-	}
+    /**
+     * Check whether a language is valid or not.
+     *
+     * @param string $locale The language
+     *
+     * @return bool
+     */
+    public function valid($locale)
+    {
+        return in_array($locale, $this->getAvailable(), true);
+    }
 
-	/**
-	 * Sanitize a locale
-	 *
-	 * @param string $locale
-	 *
-	 * @return string
-	 */
-	public function sanitize($locale = null)
-	{
-		$fallback = $this->defaultLocale();
+    /**
+     * Sanitize a locale.
+     *
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function sanitize($locale = null)
+    {
+        $fallback = $this->defaultLocale();
 
-		return $this->valid($locale) ? $locale : $fallback;
-	}
+        return $this->valid($locale) ? $locale : $fallback;
+    }
 
-	////////////////////////////////////////////////////////////////////
-	/////////////////////////////// HELPERS ////////////////////////////
-	////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    /////////////////////////////// HELPERS ////////////////////////////
+    ////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Translate a short locale to long (en => en_US)
-	 *
-	 * @param string $locale
-	 *
-	 * @return string
-	 */
-	public function shortToLongLocale($locale)
-	{
-		$locales = array(
-			'en' => 'en_US',
-			'zh' => 'zh_CN',
-		);
+    /**
+     * Translate a short locale to long (en => en_US).
+     *
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function shortToLongLocale($locale)
+    {
+        $locales = [
+            'en' => 'en_US',
+            'zh' => 'zh_CN',
+        ];
 
-		// Get correct locale
-		$fallback = $locale.'_'.strtoupper($locale);
-		$locale   = array_get($locales, $locale, $fallback);
+        // Get correct locale
+        $fallback = $locale.'_'.strtoupper($locale);
+        $locale = array_get($locales, $locale, $fallback);
 
-		return $locale;
-	}
+        return $locale;
+    }
 }

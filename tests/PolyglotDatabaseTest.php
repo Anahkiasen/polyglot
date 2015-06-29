@@ -1,4 +1,5 @@
 <?php
+
 namespace Polyglot;
 
 use Polyglot\Dummies\RealArticle;
@@ -6,89 +7,89 @@ use Polyglot\TestCases\DatabaseTestCase;
 
 class PolyglotDatabaseTest extends DatabaseTestCase
 {
-	public function setUp()
-	{
-		parent::setUp();
-		$this->app['config'] = $this->mockConfig(['polyglot::fallback' => null]);
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $this->app['config'] = $this->mockConfig(['polyglot::fallback' => null]);
+    }
 
-	public function testUpdateTimestampsOnSave()
-	{
-		$this->createArticle();
+    public function testUpdateTimestampsOnSave()
+    {
+        $this->createArticle();
 
-		$article = RealArticle::first();
-		$start   = $article->updated_at;
+        $article = RealArticle::first();
+        $start = $article->updated_at;
 
-		sleep(1);
+        sleep(1);
 
-		$article->title = 'different';
-		$article->lang  = 'fr';
-		$article->save();
+        $article->title = 'different';
+        $article->lang = 'fr';
+        $article->save();
 
-		$this->assertNotEquals($start, $article->updated_at);
-	}
+        $this->assertNotEquals($start, $article->updated_at);
+    }
 
-	public function testScopeWithLang()
-	{
-		$article = $this->createArticle();
+    public function testScopeWithLang()
+    {
+        $article = $this->createArticle();
 
-		$article = RealArticle::withLang('fr')->where('id', $article->id)->first();
-		$this->assertEquals($article->fr->title, "Start title");
+        $article = RealArticle::withLang('fr')->where('id', $article->id)->first();
+        $this->assertEquals($article->fr->title, 'Start title');
 
-		// empty
-		$article = RealArticle::withLang()->where('id', $article->id)->first();
-		$this->assertEquals($article->fr->title, "Start title");
-	}
+        // empty
+        $article = RealArticle::withLang()->where('id', $article->id)->first();
+        $this->assertEquals($article->fr->title, 'Start title');
+    }
 
-	public function testLocalizeHelper()
-	{
-		$article = $this->createArticle();
+    public function testLocalizeHelper()
+    {
+        $article = $this->createArticle();
 
-		$this->assertFalse($article->localize(array()));
+        $this->assertFalse($article->localize([]));
 
-		$article->localize(array(
-			'title' => array(
-				'fr' => 'fr title',
-				'en' => 'en title',
-			),
-		));
+        $article->localize([
+            'title' => [
+                'fr' => 'fr title',
+                'en' => 'en title',
+            ],
+        ]);
 
-		$this->assertEquals($article->fr->title, 'fr title');
-	}
+        $this->assertEquals($article->fr->title, 'fr title');
+    }
 
-	public function testLangHelper()
-	{
-		$article = $this->createArticle();
+    public function testLangHelper()
+    {
+        $article = $this->createArticle();
 
-		$fr = $article->lang();
-		$this->isInstanceOf($fr, 'Polyglot\Dummies\RealArticleLang');
+        $fr = $article->lang();
+        $this->isInstanceOf($fr, 'Polyglot\Dummies\RealArticleLang');
 
-		$en = $article->lang('en');
-		$this->isInstanceOf($en, 'Polyglot\Dummies\RealArticleLang');
-	}
+        $en = $article->lang('en');
+        $this->isInstanceOf($en, 'Polyglot\Dummies\RealArticleLang');
+    }
 
-	public function testIssetHelper()
-	{
-		$article = $this->createArticle();
+    public function testIssetHelper()
+    {
+        $article = $this->createArticle();
 
-		$this->assertTrue(isset($article->fr));
-		$this->assertTrue(isset($article->title));
+        $this->assertTrue(isset($article->fr));
+        $this->assertTrue(isset($article->title));
 
-		$this->assertEquals($article->fr->title, 'Start title');
-	}
+        $this->assertEquals($article->fr->title, 'Start title');
+    }
 
-	//////////////////////////////////////////////////////////////////////
-	////////////////////////////// HELPERS ///////////////////////////////
-	//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    ////////////////////////////// HELPERS ///////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 
-	protected function createArticle()
-	{
-		$article        = new RealArticle();
-		$article->name  = 'Start name';
-		$article->title = 'Start title';
-		$article->lang  = 'fr';
-		$article->save();
+    protected function createArticle()
+    {
+        $article = new RealArticle();
+        $article->name = 'Start name';
+        $article->title = 'Start title';
+        $article->lang = 'fr';
+        $article->save();
 
-		return $article;
-	}
+        return $article;
+    }
 }

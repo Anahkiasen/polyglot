@@ -1,22 +1,23 @@
 <?php
+
 namespace Polyglot\Dummies;
 
 use Illuminate\Database\Eloquent\Model;
 
 class RealArticleLang extends Model
 {
-	/**
-	 * @type array
-	 */
-	protected $fillable = ['title', 'real_article_id', 'lang'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['title', 'real_article_id', 'lang'];
 
-	/**
-	 * @type string
-	 */
-	protected $table = 'article_lang';
+    /**
+     * @var string
+     */
+    protected $table = 'article_lang';
 
-	/**
-	 * @type bool
-	 */
-	public $timestamps = false;
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 }

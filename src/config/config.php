@@ -1,41 +1,43 @@
-<?php return array(
+<?php
 
-	// Whether to swap out the facades (Router, Lang, etc) with
-	// Polyglot's, disable this if you need other packages to do the same
-	'facades'       => true,
+return [
 
-	// Locales
-	////////////////////////////////////////////////////////////////////
+    // Whether to swap out the facades (Router, Lang, etc) with
+    // Polyglot's, disable this if you need other packages to do the same
+    'facades' => true,
 
-	// The default locale if none is provided in the URL
-	// Leave empty to force the use of locales prefixes in URLs
-	'default'       => 'en',
+    // Locales
+    ////////////////////////////////////////////////////////////////////
 
-	// The fallback locale for translations
-	// If null, the default locale is used
-	'fallback'      => null,
+    // The default locale if none is provided in the URL
+    // Leave empty to force the use of locales prefixes in URLs
+    'default' => 'en',
 
-	// The available locales
-	'locales'       => array(),
+    // The fallback locale for translations
+    // If null, the default locale is used
+    'fallback' => null,
 
-	// Gettext
-	////////////////////////////////////////////////////////////////////
+    // The available locales
+    'locales' => [],
 
-	// The domain of your translations, for gettext use
-	'domain'        => 'messages',
+    // Gettext
+    ////////////////////////////////////////////////////////////////////
 
-	// Where the PO/MO files reside
+    // The domain of your translations, for gettext use
+    'domain' => 'messages',
 
-	'folder'        => app_path('lang'),
-	// Format of the compiled files
-	'file'          => '{domain}.po',
+    // Where the PO/MO files reside
 
-	// Database
-	////////////////////////////////////////////////////////////////////
+    'folder' => app_path('lang'),
+    // Format of the compiled files
+    'file' => '{domain}.po',
 
-	// The pattern Polyglot should follow to find the Lang classes
-	// Examples are "Lang\{model}", "{model}Lang", where {model}
-	// will be replaced by the model's name
-	'model_pattern' => '{model}Lang',
+    // Database
+    ////////////////////////////////////////////////////////////////////
 
-);
+    // The pattern Polyglot should follow to find the Lang classes
+    // Examples are "Lang\{model}", "{model}Lang", where {model}
+    // will be replaced by the model's name
+    'model_pattern' => '{model}Lang',
+
+];

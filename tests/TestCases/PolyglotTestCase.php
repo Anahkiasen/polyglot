@@ -1,4 +1,5 @@
 <?php
+
 namespace Polyglot\TestCases;
 
 use Illuminate\Support\Facades\Config;
@@ -6,21 +7,21 @@ use Polyglot\PolyglotServiceProvider;
 
 abstract class PolyglotTestCase extends ContainerTestCase
 {
-	/**
-	 * Set up the tests
-	 */
-	public function setUp()
-	{
-		parent::setUp();
+    /**
+     * Set up the tests.
+     */
+    public function setUp()
+    {
+        parent::setUp();
 
-		// Bind Polyglot classes
-		$provider = new PolyglotServiceProvider($this->app);
-		$provider->register();
-		$provider->boot();
+        // Bind Polyglot classes
+        $provider = new PolyglotServiceProvider($this->app);
+        $provider->register();
+        $provider->boot();
 
-		$this->app['translator'] = $this->app['polyglot.translator'];
+        $this->app['translator'] = $this->app['polyglot.translator'];
 
-		// Configure facades
-		Config::setFacadeApplication($this->app);
-	}
+        // Configure facades
+        Config::setFacadeApplication($this->app);
+    }
 }
