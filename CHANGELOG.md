@@ -1,7 +1,13 @@
 # CHANGELOG
 
+## 1.4.0 - 2015-06-29
+
+### Changed
+- Compilation errors now throw a `CompilationException`
+
 ## 1.3.2 - 2014-11-17
 
+### Fixed
 - Fixed out of date Twig clear command call
 
 ## 1.3.1 - 2014-08-19
