@@ -3,6 +3,7 @@ namespace Polyglot\Localization\Services;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
+use Polyglot\Localization\Exceptions\CompilationException;
 
 abstract class AbstractService
 {
@@ -46,7 +47,7 @@ abstract class AbstractService
 	 * @param string $message
 	 * @param string $parameters ...
 	 *
-	 * @return void
+	 * @return int
 	 */
 	protected function execf()
 	{
@@ -54,6 +55,11 @@ abstract class AbstractService
 		$message   = array_pull($arguments, 0);
 		$command   = vsprintf($message, $arguments);
 
-		return exec($command);
+		// Pipe the ouput of `$command` into `$output`
+		exec($command.' 2>&1', $output, $result);
+
+		if ($result > 0) {
+			throw new CompilationException(implode(PHP_EOL, $output));
+		}
 	}
 }
