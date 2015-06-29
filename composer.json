@@ -37,5 +37,8 @@
     "psr-4": {
       "Polyglot\\": "tests"
     }
+  },
+  "scripts": {
+    "test": "phpunit --process-isolation"
   }
 }
