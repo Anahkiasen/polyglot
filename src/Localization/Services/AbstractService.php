@@ -47,7 +47,9 @@ abstract class AbstractService
 	 * @param string $message
 	 * @param string $parameters ...
 	 *
-	 * @return int
+	 * @throws CompilationException
+	 *
+	 * @return void
 	 */
 	protected function execf()
 	{
