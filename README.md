@@ -101,6 +101,7 @@ Polyglot also provide various locale helpers hooked into the `Lang` and `URL` cl
 
 ```php
 URL::locale() // Returns the locale in the current URL
+URL::switchLanguage('fr') // Returns the current url with different locale
 
 Lang::active('fr') // Check if fr is the current locale
 Lang::setInternalLocale('fr') // Set both the locale with the Translator class and setlocale method
