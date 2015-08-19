@@ -40,7 +40,7 @@ class Lang extends Translator
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->domain = $app['config']->get('polyglot::domain');
+        $this->domain = $app['config']->get('polyglot.domain');
 
         parent::__construct(
             $app['translation.loader'],
@@ -73,7 +73,7 @@ class Lang extends Translator
     {
         $subfolder = $subfolder ? '/'.$subfolder : $subfolder;
 
-        return $this->app['config']->get('polyglot::folder').$subfolder;
+        return $this->app['config']->get('polyglot.folder').$subfolder;
     }
 
     /**
@@ -150,7 +150,7 @@ class Lang extends Translator
      */
     public function defaultLocale()
     {
-        return $this->app['config']->get('polyglot::default');
+        return $this->app['config']->get('polyglot.default');
     }
 
     /**
@@ -160,7 +160,7 @@ class Lang extends Translator
      */
     public function fallbackLocale()
     {
-        return $this->app['config']->get('polyglot::fallback') ?: $this->app['config']->get('polyglot::default');
+        return $this->app['config']->get('polyglot.fallback') ?: $this->app['config']->get('polyglot.default');
     }
 
     /**
@@ -238,7 +238,7 @@ class Lang extends Translator
      */
     public function getAvailable()
     {
-        return $this->app['config']->get('polyglot::locales');
+        return $this->app['config']->get('polyglot.locales');
     }
 
     /**

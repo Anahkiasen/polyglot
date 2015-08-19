@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Lang;
 /**
  * Abstract model that eases the localization of model.
  */
-abstract class Polyglot extends Model
+trait Polyglot
 {
     /**
      * The attributes to translate.
@@ -127,7 +127,7 @@ abstract class Polyglot extends Model
             $relation = $this->hasOne($this->getLangClass())->whereLang($key);
 
             if ($relation->getResults() === null) {
-                $relation = $this->hasOne($this->getLangClass())->whereLang(Config::get('polyglot::fallback'));
+                $relation = $this->hasOne($this->getLangClass())->whereLang(Config::get('polyglot.fallback'));
             }
 
             return $this->relations[$key] = $relation->getResults();
@@ -224,11 +224,10 @@ abstract class Polyglot extends Model
      */
     public function getLangClass()
     {
-        $pattern = Config::get('polyglot::model_pattern');
+        $pattern = Config::get('polyglot.model_pattern');
 
         // Get class name
-        $model = get_called_class();
-        $model = class_basename($model);
+        $model = class_basename($this);
 
         return str_replace('{model}', $model, $pattern);
     }
@@ -240,6 +239,6 @@ abstract class Polyglot extends Model
      */
     protected function getAvailable()
     {
-        return Config::get('polyglot::locales');
+        return Config::get('polyglot.locales');
     }
 }

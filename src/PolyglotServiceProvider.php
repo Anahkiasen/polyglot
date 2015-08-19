@@ -14,11 +14,16 @@ use Twig_Extensions_Extension_I18n;
 class PolyglotServiceProvider extends ServiceProvider
 {
     /**
+     * @var string
+     */
+    protected $configPath = __DIR__.'/../config/polyglot.php';
+
+    /**
      * Register the service provider.
      */
     public function register()
     {
-        $this->app['config']->package('anahkiasen/polyglot', __DIR__.'/config');
+        $this->mergeConfigFrom($this->configPath, 'polyglot');
 
         // Bind services
         $this->app->singleton('polyglot.translator', 'Polyglot\Services\Lang');
@@ -49,8 +54,10 @@ class PolyglotServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([$this->configPath => config_path('polyglot.php')], 'config');
+
         // Swap facades if need be
-        if ($this->app['config']->get('polyglot::facades')) {
+        if ($this->app['config']->get('polyglot.facades')) {
             Facades\Lang::swap($this->app['polyglot.translator']);
             Facades\Route::swap($this->app['polyglot.router']);
             Facades\URL::swap($this->app['polyglot.url']);

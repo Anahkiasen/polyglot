@@ -33,7 +33,7 @@ class Extractor extends AbstractService
     public function getLocaleFile($locale)
     {
         $directory = $this->app['polyglot.translator']->getLocaleFolder($locale);
-        $translated = $this->app['config']->get('polyglot::file');
+        $translated = $this->app['config']->get('polyglot.file');
         $translated = $directory.'/'.strtr($translated, ['{domain}' => $this->app['polyglot.translator']->getDomain()]);
 
         return $translated;
