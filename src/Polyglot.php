@@ -12,13 +12,6 @@ use Illuminate\Support\Facades\Lang;
 trait Polyglot
 {
     /**
-     * The attributes to translate.
-     *
-     * @var array
-     */
-    protected $polyglot = [];
-
-    /**
      * The "booting" method of the model.
      */
     protected static function boot()
