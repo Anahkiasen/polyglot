@@ -16,17 +16,17 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/container": "~4.2",
-    "illuminate/support": "~4.2"
+    "illuminate/container": "5.*",
+    "illuminate/support": "5.*"
   },
   "require-dev": {
-    "fabpot/php-cs-fixer": "2.0.*@dev",
-    "illuminate/database": "~4.2",
-    "illuminate/routing": "~4.2",
-    "illuminate/translation": "~4.2",
+    "fabpot/php-cs-fixer": "^1.10",
+    "illuminate/database": "5.*",
+    "illuminate/routing": "5.*",
+    "illuminate/translation": "5.*",
     "mockery/mockery": "^0.9.4",
     "patchwork/utf8": "^1.2",
-    "phpunit/phpunit": "^4.7"
+    "phpunit/phpunit": "^4.8"
   },
   "autoload": {
     "psr-4": {
