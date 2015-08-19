@@ -29,7 +29,10 @@ class PolyglotServiceProvider extends ServiceProvider
         $this->app->singleton('polyglot.translator', 'Polyglot\Services\Lang');
 
         $this->app->singleton('polyglot.router', function ($app) {
-            return new Router($app['events'], $app);
+            $router = new Router($app['events'], $app);
+            $router->setRoutes($app['router']->getRoutes());
+
+            return $router;
         });
 
         $this->app->singleton('polyglot.url', function ($app) {
