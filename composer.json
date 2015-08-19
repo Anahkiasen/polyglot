@@ -40,5 +40,10 @@
   },
   "scripts": {
     "test": "phpunit --process-isolation"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "2.0-dev"
+    }
   }
 }
