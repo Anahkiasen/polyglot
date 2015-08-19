@@ -57,11 +57,7 @@ class PolyglotServiceProvider extends ServiceProvider
         $this->publishes([$this->configPath => config_path('polyglot.php')], 'config');
 
         // Swap facades if need be
-        if ($this->app['config']->get('polyglot.facades')) {
-            Facades\Lang::swap($this->app['polyglot.translator']);
-            Facades\Route::swap($this->app['polyglot.router']);
-            Facades\URL::swap($this->app['polyglot.url']);
-        }
+        $this->swapFacades();
 
         // Configure gettext
         $locale = $this->app['polyglot.url']->locale();
@@ -83,5 +79,23 @@ class PolyglotServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['polyglot.translator', 'polyglot.router', 'polyglot.url'];
+    }
+
+    /**
+     * Swap the facades with their Polyglot equivalent
+     */
+    protected function swapFacades()
+    {
+        $facades  = $this->app['config']->get('polyglot.facades');
+        $bindings = ['Lang' => 'translator', 'Route' => 'router', 'URL' => 'url'];
+
+        if ($facades) {
+            $facades = $facades === true ? ['Lang', 'Route', 'URL'] : $facades;
+            foreach ($facades as $facade) {
+                $binding = $bindings[$facade];
+                $facade  = 'Illuminate\Support\Facades\\'.$facade;
+                $facade::swap($this->app['polyglot.'.$binding]);
+            }
+        }
     }
 }

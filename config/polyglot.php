@@ -4,6 +4,7 @@ return [
 
     // Whether to swap out the facades (Router, Lang, etc) with
     // Polyglot's, disable this if you need other packages to do the same
+    // Can specify an array of facades to swap, eg. ['Lang', 'URL']
     'facades' => true,
 
     // Locales
