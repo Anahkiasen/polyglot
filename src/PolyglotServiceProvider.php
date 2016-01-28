@@ -16,7 +16,7 @@ class PolyglotServiceProvider extends ServiceProvider
     /**
      * @var string
      */
-    protected $configPath = __DIR__.'/../config/polyglot.php';
+    protected $configPath = '../config/polyglot.php';
 
     /**
      * Register the service provider.
@@ -28,12 +28,14 @@ class PolyglotServiceProvider extends ServiceProvider
         // Bind services
         $this->app->singleton('polyglot.translator', 'Polyglot\Services\Lang');
 
-        $this->app->singleton('polyglot.router', function ($app) {
+        $this->app->singleton('Polyglot\Services\Router', function ($app) {
             $router = new Router($app['events'], $app);
             $router->setRoutes($app['router']->getRoutes());
 
             return $router;
         });
+
+        $this->app->alias('Polyglot\Services\Router', 'polyglot.router');
 
         $this->app->singleton('polyglot.url', function ($app) {
             $routes = $app['polyglot.router']->getRoutes();
