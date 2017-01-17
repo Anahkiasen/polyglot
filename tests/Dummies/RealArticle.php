@@ -2,10 +2,13 @@
 
 namespace Polyglot\Dummies;
 
+use Illuminate\Database\Eloquent\Model;
 use Polyglot\Polyglot;
 
-class RealArticle extends Polyglot
+class RealArticle extends Model
 {
+    use Polyglot;
+    
     /**
      * @var array
      */
