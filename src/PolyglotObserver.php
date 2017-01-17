@@ -2,6 +2,7 @@
 
 namespace Polyglot;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Lang;
 
 class PolyglotObserver
@@ -9,11 +10,11 @@ class PolyglotObserver
     /**
      * Save separately the model attributes and polyglot ones.
      *
-     * @param Polyglot $model
+     * @param Model $model
      *
      * @return bool|null
      */
-    public function saving(Polyglot $model)
+    public function saving(Model $model)
     {
         // Extract polyglot attributes
         $translated = $this->extractTranslatedAttributes($model);
@@ -55,11 +56,11 @@ class PolyglotObserver
     }
 
     /**
-     * @param Polyglot $model
+     * @param Model $model
      *
      * @return array
      */
-    protected function extractTranslatedAttributes(Polyglot &$model)
+    protected function extractTranslatedAttributes(Model &$model)
     {
         $attributes = $model->getAttributes();
         $polyglot = $model->getPolyglotAttributes();
