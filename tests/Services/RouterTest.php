@@ -42,7 +42,7 @@ class RouterTest extends PolyglotTestCase
         $router = $this->router;
 
         $this->router->groupLocale(['before' => 'auth'], function () use ($router) {
-            $router->get('foobar', 'foobar');
+            $router->get('foobar', 'Fake@foobar');
         });
 
         foreach ($this->router->getRoutes() as $r) {
@@ -58,7 +58,7 @@ class RouterTest extends PolyglotTestCase
         $router = $this->router;
 
         $this->router->groupLocale(function () use ($router) {
-            $router->get('foobar', 'foobar');
+            $router->get('foobar', 'Fake@foobar');
         });
 
         foreach ($this->router->getRoutes() as $r) {

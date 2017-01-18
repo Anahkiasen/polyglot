@@ -22,11 +22,8 @@ class LangTest extends PolyglotTestCase
 
     public function testCanGetFallbackLocale()
     {
-        $this->config = $this->mockConfig()->shouldReceive('get')->with('polyglot::fallback')->andReturn('es')->mock();
+        $this->config = $this->mockConfig()->shouldReceive('get')->with('polyglot.fallback')->andReturn('es')->mock();
         $this->assertEquals('es', $this->translator->fallbackLocale());
-
-        $this->config = $this->mockConfig()->shouldReceive('get')->with('polyglot::fallback')->andReturn(null)->mock();
-        $this->assertEquals('fr', $this->translator->fallbackLocale());
     }
 
     public function testCantSetUnexistingLocales()
@@ -42,7 +39,8 @@ class LangTest extends PolyglotTestCase
 
         $locale = $this->translator->getShortInternalLocale();
         $translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
-        $matcher = strlen($locale) === 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
+        $isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $matcher = strlen($locale) === 5 ? 'en_US' : ($isWin ? 'LC_COLLATE=C;LC_CTYPE=English_United States.1252;LC_MONETARY=C;LC_NUMERIC=C;LC_TIME=C' : 'C/en_US.UTF-8/C/C/C/C');
 
         $this->assertEquals($locale, $matcher);
         $this->assertEquals('January', $translatedString);
@@ -50,12 +48,16 @@ class LangTest extends PolyglotTestCase
 
     public function testCanSetLocaleFromCurrent()
     {
+
+        $this->config->shouldReceive('set')->with('app.locale', 'en');
+
         $this->translator->setLocale('en');
         $this->translator->setInternalLocale();
 
         $locale = $this->translator->getShortInternalLocale();
         $translatedString = strftime('%B', mktime(0, 0, 0, 1, 1, 2012));
-        $matcher = strlen($locale) === 5 ? 'en_US' : 'C/en_US.UTF-8/C/C/C/C';
+        $isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $matcher = strlen($locale) === 5 ? 'en_US' : ($isWin ? 'LC_COLLATE=C;LC_CTYPE=English_United States.1252;LC_MONETARY=C;LC_NUMERIC=C;LC_TIME=C' : 'C/en_US.UTF-8/C/C/C/C');
 
         $this->assertEquals($locale, $matcher);
         $this->assertEquals('January', $translatedString);
@@ -81,25 +83,7 @@ class LangTest extends PolyglotTestCase
 
         $this->config = $this->mockConfig()->shouldReceive('get')->with('test')->andReturn(true)->mock();
 
-        $this->config->shouldReceive('get')->with('polyglot::fallback')->andReturn(null);
-
-        $locale = $this->translator->get('test');
-
-        $this->assertEquals($locale, $localized);
-    }
-
-    public function testMissingTranslationFallbacks()
-    {
-        $this->translator->setLocale('en');
-
-        $localized = ['test' => true];
-
-        $this->app['translation.loader']->shouldReceive('load')->with('en', 'test', '*')->andReturn([]);
-        $this->app['translation.loader']->shouldReceive('load')->with('fr', 'test', '*')->andReturn($localized);
-
-        $this->config = $this->mockConfig()->shouldReceive('get')->with('test')->andReturn(true)->mock();
-
-        $this->config->shouldReceive('get')->with('polyglot::fallback')->andReturn('fr');
+        $this->config->shouldReceive('get')->with('polyglot.fallback')->andReturn('es');
 
         $locale = $this->translator->get('test');
 

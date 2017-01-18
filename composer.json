@@ -16,18 +16,14 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/container": "5.*",
-    "illuminate/support": "5.*"
+    "laravel/framework": "5.3.*"
   },
   "require-dev": {
+    "laravel/laravel": "5.3.*",
+    "phpunit/phpunit": "^4.8",
     "fabpot/php-cs-fixer": "^1.10",
-    "illuminate/database": "5.*",
-    "illuminate/routing": "5.*",
-    "illuminate/translation": "5.*",
-    "illuminate/events": "5.*",
     "mockery/mockery": "^0.9.4",
-    "patchwork/utf8": "^1.2",
-    "phpunit/phpunit": "^4.8"
+    "patchwork/utf8": "^1.2"
   },
   "autoload": {
     "psr-4": {

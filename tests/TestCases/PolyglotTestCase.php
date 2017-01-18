@@ -15,13 +15,21 @@ abstract class PolyglotTestCase extends ContainerTestCase
         parent::setUp();
 
         // Bind Polyglot classes
-        $provider = new PolyglotServiceProvider($this->app);
-        $provider->register();
-        $provider->boot();
-
+        //$provider = new PolyglotServiceProvider($this->app);
+        //$provider->register();
+        //$provider->boot();
+    
+        $this->app->register(PolyglotServiceProvider::class);
+        
         $this->app['translator'] = $this->app['polyglot.translator'];
-
-        // Configure facades
-        Config::setFacadeApplication($this->app);
+    }
+    
+    public function createApplication() {
+        
+        $app = parent::createApplication();
+    
+        Config::setFacadeApplication($app);
+        
+        return $app;
     }
 }

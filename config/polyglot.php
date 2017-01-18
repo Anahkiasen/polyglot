@@ -19,7 +19,7 @@ return [
     'fallback' => null,
 
     // The available locales
-    'locales' => [],
+    'locales' => ['en'],
 
     // Gettext
     ////////////////////////////////////////////////////////////////////
