@@ -12,11 +12,11 @@ Polyglot is a localization helper for the Laravel framework, it's an helper clas
 
 To install it, do `composer require anahkiasen/polyglot`, then add `Polyglot\PolyglotServiceProvider` to the `providers` array in `app/config/app.php`.
 
-Publish config to your laravel app : `php artisan config:publish anahkiasen/polyglot`
+Publish config to your laravel app : `php artisan vendor:publish --provider=Polyglot\PolyglotServiceProvider`
 
 ## Model localization
 
-Setting a model as polyglot will allow you to make fields speak several languages. Polyglot requires you to separate common fields from localized ones assuming the following common pattern :
+Using the polyglot trait on a model will allow you to make fields speak several languages. Polyglot requires you to separate common fields from localized ones assuming the following common pattern :
 
 *Take the example of a blog article model*
 
@@ -37,8 +37,10 @@ From there you can either access any language easily by doing the following : `$
 **Or** you can add the following parameter to your model and let Polyglot automatically translate attributes.
 
 ```php
-class Article extends Polyglot
+class Article extends Model
 {
+  use Polyglot\Polyglot;
+
   protected $polyglot = ['title', 'content'];
 }
 
