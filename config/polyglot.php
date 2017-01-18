@@ -19,7 +19,7 @@ return [
     'fallback' => null,
 
     // The available locales
-    'locales' => [],
+    'locales' => ['en'],
 
     // Gettext
     ////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ return [
 
     // Where the PO/MO files reside
 
-    'folder' => app_path('lang'),
+    'folder' => base_path('resources/lang'),
     // Format of the compiled files
     'file' => '{domain}.po',
 

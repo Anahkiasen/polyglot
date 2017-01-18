@@ -2,10 +2,13 @@
 
 namespace Polyglot\Dummies;
 
+use Illuminate\Database\Eloquent\Model;
 use Polyglot\Polyglot;
 
-class Article extends Polyglot
+class Article extends Model
 {
+    use Polyglot;
+    
     /**
      * The attributes to translate.
      *

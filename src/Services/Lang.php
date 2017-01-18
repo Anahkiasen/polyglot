@@ -112,19 +112,13 @@ class Lang extends Translator
      * @param string $key
      * @param array  $replace
      * @param string $locale
+     * @param boolean $fallback
      *
      * @return string
      */
-    public function get($key, array $replace = [], $locale = null)
+    public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
-        // Get translation and fallback
-        $fallback = $this->fallbackLocale();
-        $translation = parent::get($key, $replace, $locale);
-        if ($translation === $key and $fallback !== $this->locale) {
-            return parent::get($key, $replace, $fallback);
-        }
-
-        return $translation;
+        return parent::get($key, $replace, $locale, $fallback);
     }
 
     ////////////////////////////////////////////////////////////////////

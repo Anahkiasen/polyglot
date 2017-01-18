@@ -61,7 +61,6 @@ class PolyglotServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->configPath = __DIR__.'/'.$this->configPath;
         
         $this->publishes([$this->configPath => config_path('polyglot.php')], 'config');
 

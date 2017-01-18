@@ -4,33 +4,26 @@ namespace Polyglot\TestCases;
 
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Support\Str;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Polyglot\PolyglotServiceProvider;
 use Polyglot\Services\UrlGenerator;
 
 /**
  * Base Container-mocking class.
  */
-abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
+abstract class ContainerTestCase extends TestCase
 {
-    /**
-     * The current IoC Container.
-     *
-     * @var Container
-     */
-    protected $app;
-
     /**
      * Set up the tests.
      */
     public function setUp()
     {
+        parent::setUp();
+    
         date_default_timezone_set('Europe/London');
-
-        // Create container
-        $this->app = new Container();
-
+        
         $provider = new EventServiceProvider($this->app);
         $provider->register();
 
@@ -48,6 +41,20 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         Mockery::close();
+    }
+    
+    /**
+     * Boots the application.
+     *
+     * @return \Illuminate\Foundation\Application
+     */
+    public function createApplication()
+    {
+        $app = require __DIR__.'../../../vendor/laravel/laravel/bootstrap/app.php';
+        
+        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+        
+        return $app;
     }
 
     /**
@@ -102,7 +109,7 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
     /**
      * Mock Request.
      *
-     * @return Mockery
+     * @return Mockery\MockInterface
      */
     protected function mockRequest($segment = 'fr')
     {
@@ -122,23 +129,31 @@ abstract class ContainerTestCase extends PHPUnit_Framework_TestCase
     /**
      * Mock Config.
      *
-     * @return Mockery
+     * @return Mockery\MockInterface
      */
     protected function mockConfig($options = [])
     {
         $options = array_merge([
             'app.locale' => 'fr',
-            'polyglot::folder' => __DIR__.'/../_locales',
-            'polyglot::domain' => 'test',
-            'polyglot::facades' => false,
-            'polyglot::default' => 'fr',
-            'polyglot::locales' => ['fr', 'en', 'de'],
-            'polyglot::model_pattern' => 'Polyglot\Dummies\{model}Lang',
+            'polyglot.fallback' => 'es',
+            'polyglot.folder' => __DIR__.'/../_locales',
+            'polyglot.domain' => 'test',
+            'polyglot.facades' => false,
+            'polyglot.default' => 'fr',
+            'polyglot.locales' => ['fr', 'en', 'de', 'es'],
+            'polyglot.model_pattern' => 'Polyglot\Dummies\{model}Lang',
         ], $options);
 
         $config = Mockery::mock('Illuminate\Config\Repository');
         $config->shouldReceive('package');
-
+        
+        $config->shouldReceive('set');
+        
+        $config->shouldReceive('offsetGet');
+    
+        $config->shouldReceive('get')->with("polyglot", array())->andReturn($options);
+        
+        
         foreach ($options as $key => $value) {
             $config->shouldReceive('get')->with($key)->andReturn($value);
         }
