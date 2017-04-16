@@ -282,6 +282,9 @@ class Lang extends Translator
 		$locales = array(
 			'en' => 'en_US',
 			'zh' => 'zh_CN',
+			'es' => 'es_ES',
+			'fr' => 'fr_FR',
+			'de' => 'de_DE'
 		);
 
 		// Get correct locale
